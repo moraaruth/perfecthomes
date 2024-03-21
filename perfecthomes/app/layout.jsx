@@ -1,7 +1,21 @@
-const layout = () => {
+import '@/assets/styles/globals.css'
+
+
+export const metadata = {
+    title: 'PerfectHomes | Find your Perfect Home',
+    description: 'Find your dream home',
+    keywords: 'rentals, find rentals, find property',
+}
+const MainLayout = ({ children }) => {
     return (
-        <div>layout</div>
+        <html lang="en">
+            <body>
+                <div>{children}</div>
+            </body>
+
+
+        </html>
     )
 }
 
-export default layout
+export default MainLayout;
