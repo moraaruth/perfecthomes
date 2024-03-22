@@ -1,12 +1,17 @@
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
+import Hero from "@/components/Hero";
+import InfoBoxes from "@/components/infoBoxes";
+import Footer from "@/components/Footer";
+
 
 const HomePage = () => {
-    return <div>
+    return <>
         <Navbar />
-        <h1 className="text-3xl">Welcome</h1>
-        <Link href="/properties">Show Properties</Link>
-    </div>
+        <Hero />      
+        <InfoBoxes />
+        <Footer />
+       
+    </>
 }
 
 export default HomePage;
