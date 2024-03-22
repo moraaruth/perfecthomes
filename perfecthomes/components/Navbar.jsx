@@ -1,11 +1,17 @@
+'use client'
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '@/assets/images/logo.jpg';
 // import profileDefault from '@/assets/images/profile.png';
 import PersonIcon from '@mui/icons-material/Person';
+import { FaGoogle } from 'react-icons/fa';
+
 
 
 const Navbar = () => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    
     return (
         <nav className='bg-blue-700 border-b border-blue-500'>
             <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
@@ -51,19 +57,19 @@ const Navbar = () => {
                         <div className='hidden md:ml-6 md:block'>
                             <div className='flex space-x-2'>
                                 <Link
-                                    href='/index.html'
+                                    href='/index'
                                     className='text-white bg-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                                 >
                                     Home
                                 </Link>
                                 <Link
-                                    href='/properties.html'
+                                    href='/properties'
                                     className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                                 >
                                     Properties
                                 </Link>
                                 <Link
-                                    href='/add-property.html'
+                                    href='/property/add'
                                     className='text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
                                 >
                                     Add Property
@@ -76,7 +82,7 @@ const Navbar = () => {
                     <div className='hidden md:block md:ml-6'>
                         <div className='flex items-center'>
                             <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'>
-                                <i className='fa-brands fa-google text-white mr-2'></i>
+                                <FaGoogle className='text-white mr-2' />
                                 <span>Login or Register</span>
                             </button>
                         </div>
@@ -161,15 +167,15 @@ const Navbar = () => {
                                 >
                                     Saved Properties
                                 </Link>
-                                <Link
-                                    href='#'
+                                <button
+                                  
                                     className='block px-4 py-2 text-sm text-gray-700'
                                     role='menuitem'
                                     tabIndex='-1'
                                     id='user-menu-item-2'
                                 >
                                     Sign Out
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -180,25 +186,25 @@ const Navbar = () => {
             <div className='hidden' id='mobile-menu'>
                 <div className='space-y-1 px-2 pb-3 pt-2'>
                     <Link
-                        href='/index.html'
+                        href='/'
                         className='bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium'
                     >
                         Home
                     </Link>
                     <Link
-                        href='/properties.html'
+                        href='/properties'
                         className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
                     >
                         Properties
                     </Link>
                     <Link
-                        href='/add-property.html'
+                        href='/property/add'
                         className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
                     >
                         Add Property
                     </Link>
                     <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4'>
-                        <i className='fa-brands fa-google mr-2'></i>
+                       <FaGoogle  className='text-white mr-2' />
                         <span>Login or Register</span>
                     </button>
                 </div>
