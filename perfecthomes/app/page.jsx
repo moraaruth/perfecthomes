@@ -1,15 +1,17 @@
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Navbar from "@/components/Navbar";
 import InfoBoxes from "@/components/infoBoxes";
 import Footer from "@/components/Footer";
 
 
+
 const HomePage = () => {
     return <>
-        <Navbar />
+      <Navbar />
         <Hero />      
         <InfoBoxes />
-        <Footer />
+        
+      <Footer />
        
     </>
 }

@@ -34,7 +34,7 @@ const InfoBoxes = () => {
             </div>
         </div>
     </section>
-        s</div>
+        </div>
 }
 
 export default InfoBoxes;
