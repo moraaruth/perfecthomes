@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 
 
-export async function connect () {
+const connectDB = async () => {
     mongoose.set('strictQuery', true);
 
   
@@ -17,7 +17,7 @@ export async function connect () {
 
         connection.on('error', (err) => {
             console.log('MongoDB connection error.Please make sure MongoDB is running. ' + err);
-            process.exit();
+            process.exit()
         })
     } catch (error) {
         console.log(error);
@@ -25,3 +25,4 @@ export async function connect () {
     }
 };
 
+export default connectDB;
