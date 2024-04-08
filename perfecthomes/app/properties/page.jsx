@@ -2,8 +2,15 @@ import Navbar from '@/components/Navbar';
 import properties from '@/properties.json';
 import Footer from '@/components/Footer';
 import PropertyCard from '@/components/PropertyCard';
+import { fetchProperties } from '@/utils/requests';
 
-const PropertiesPage = () => {
+
+const PropertiesPage = async () => {
+    const properties = await fetchProperties();
+
+
+    //sort properties by date
+    properties.sort((a,b) => new Date(b.createadAt ) - new Date(a.createadAt));
     return (
         <>
         <Navbar />
