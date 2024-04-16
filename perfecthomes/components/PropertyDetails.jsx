@@ -54,6 +54,7 @@ const PropertyDetails = ({ property }) => {
                       </div>
                      ) : (<FaTimes className='text-red-700'/>
                      )}
+                     </div>
                 </div>
                 <div className="flex items-center justify-center mb-4 pb-4 md:pb-0">
                   <div className="text-gray-500 mr-2 font-bold">Monthly</div>
