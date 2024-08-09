@@ -7,15 +7,19 @@ const PropertyCard = ({ property }) => {
 
   const getRateDisplay = () => {
     const { rates } = property;
+if(rates.sale){
+  return `${rates.sale.toLocaleString()}`;
+}
+    // if (rates.monthly) {
+    //   return `${rates.monthly.toLocaleString()}/mo`;
+    // } else if (rates.weekly) {
+    //   return `${rates.weekly.toLocaleString()}/wk`;
+    // }  else if (rates.sale) {
+    //   return `${rates.sale.toLocaleString()}/sale`;
+    // } else if (rates.daily) {
+    //   return `${rates.daily.toLocaleString()}/night`;
 
-    if (rates.monthly) {
-      return `${rates.monthly.toLocaleString()}/mo`;
-    } else if (rates.weekly) {
-      return `${rates.weekly.toLocaleString()}/wk`;
-    } else if (rates.daily) {
-      return `${rates.daily.toLocaleString()}/night`;
-
-    }
+    // }
   }
   return (
     <div className="rounded-xl shadow-md relative">
@@ -57,18 +61,22 @@ const PropertyCard = ({ property }) => {
         <div
           className="flex justify-center gap-4 text-green-900 text-sm mb-4"
         >
-          { property.rates.daily && (
+          {/* { property.rates.daily && (
             <p><FaMoneyBill Name='inline mr-2'/> Daily </p>
 
           )}
            { property.rates.weekly && (
             <p><FaMoneyBill className='inline mr-2'/> Weekly </p>
 
-          )}
-           { property.rates.monthly && (
-            <p><FaMoneyBill className='inline mr-2'/> Monthly </p>
+          )} */}
+            { property.rates.sale && (
+            <p><FaMoneyBill className='inline mr-2'/> Sale </p>
 
           )}
+           {/* { property.rates.monthly && (
+            <p><FaMoneyBill className='inline mr-2'/> Monthly </p>
+
+          )} */}
           
           
         </div>

@@ -48,14 +48,17 @@ const propertySchema = new Schema({
         }
     ],
      rates: {
-         daily: {
-             type:Number
-         },
+        //  daily: {
+        //      type:Number
+        //  },
          weekly: {
             type:Number
         },
         monthly: {
             type:Number
+        },
+        sale: {
+            type: Number
         },
      },
      seller_info: {

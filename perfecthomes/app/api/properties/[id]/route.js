@@ -104,6 +104,7 @@ export const PUT = async (request, { params }) => {
       amenities,
       rates: {
         weekly: formData.get('rates.weekly'),
+        sale: formData.get('rates.sale'),
         monthly: formData.get('rates.monthly'),
         nightly: formData.get('rates.nightly.'),
       },

@@ -4,7 +4,7 @@
       "owner": "1",
       "name": "Kileleshwa",
       "type": "Apartment",
-      "description": "This is a beautiful apartment located at Kileleshwa. It is a 2 bedroom apartment with a full kitchen and bathroom. It is available for weekly or monthly rentals.",
+      "description": "This is a beautiful apartment located at Kileleshwa. It is a 2 bedroom apartment with a full kitchen and bathroom. It is available for weekly or Price rentals.",
       "location": {
         "street": "120 Tremont Street",
         "city": "Boston",
@@ -32,7 +32,7 @@
       ],
       "rates": {
         "weekly": 1100,
-        "monthly": 4200
+        "Price": 4200
       },
       "seller_info": {
         "name": "John Doe",
@@ -76,7 +76,7 @@
       ],
       "rates": {
         "weekly": 1000,
-        "monthly": 4000
+        "Price": 4000
       },
       "seller_info": {
         "name": "Jane Smith",
@@ -122,7 +122,7 @@
       "rates": {
         "daily": 200,
         "weekly": 750,
-        "monthly": 3300
+        "Price": 3300
       },
       "seller_info": {
         "name": "David Johnson",
@@ -192,7 +192,7 @@
       ],
       "rates": {
         "weekly": 1100,
-        "monthly": 4200
+        "Price": 4200
       },
       "seller_info": {
         "name": "Michael Brown",
@@ -334,7 +334,7 @@
       ],
       "rates": {
         "weekly": 1000,
-        "monthly": 3800
+        "Price": 3800
       },
       "seller_info": {
         "name": "Lisa Taylor",
@@ -369,7 +369,7 @@
       ],
       "rates": {
         "weekly": 550,
-        "monthly": 2100
+        "Price": 2100
       },
       "seller_info": {
         "name": "Matthew Harris",

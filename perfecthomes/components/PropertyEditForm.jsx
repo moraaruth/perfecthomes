@@ -488,6 +488,19 @@ const PropertyEditForm = () => {
               />
             </div>
             <div className='flex items-center'>
+              <label htmlFor='sale_rate' className='mr-2'>
+                Sale
+              </label>
+              <input
+                type='number'
+                id='sale_rate'
+                name='rates.sale'
+                className='border rounded w-full py-2 px-3'
+                value={fields.rates.sale}
+                onChange={handleChange}
+              />
+            </div>
+            <div className='flex items-center'>
               <label htmlFor='monthly_rate' className='mr-2'>
                 Monthly
               </label>
@@ -500,7 +513,7 @@ const PropertyEditForm = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className='flex items-center'>
+            {/* <div className='flex items-center'>
               <label htmlFor='daily_rate' className='mr-2'>
                 Daily
               </label>
@@ -512,7 +525,7 @@ const PropertyEditForm = () => {
                 value={fields.rates.daily}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
         </div>
 
