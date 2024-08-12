@@ -8,7 +8,7 @@ const Footer = () => {
        
         <div className="text-center">
           <p className="text-sm text-gray-500 mt-2">
-            &copy; 2024 Perfecthomes. All rights reserved.
+            &copy; 2024 PerfectHomes. All rights reserved.
           </p>
         </div>
       </div>
