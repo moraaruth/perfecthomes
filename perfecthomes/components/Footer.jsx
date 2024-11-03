@@ -8,13 +8,7 @@ const Footer = () => {
         
         {/* Logo, Contact Us, Phone Number, and Email */}
         <div className="flex flex-col items-center md:flex-row md:space-x-4 text-center">
-          <Image 
-            src={logo} 
-            alt="Perfecthomes Logo" 
-            width={40} 
-            height={40} 
-            className="rounded-full mb-2 md:mb-0" // Makes the logo round and adjusts margin for spacing
-          />
+         
           <a href="/contact" className="text-blue-500 hover:underline">
             Contact Us
           </a>
