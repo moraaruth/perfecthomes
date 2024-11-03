@@ -25,7 +25,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="text-center">
+        <div className="text-center mt-2">
           <p className="text-sm text-gray-500">
             &copy; 2024 Perfecthomes. All rights reserved.
           </p>
