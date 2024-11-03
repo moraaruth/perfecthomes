@@ -3,28 +3,29 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 py-6 mt-auto">
-      <div className="container mx-auto flex flex-col items-center justify-center px-4">
+    <footer className="bg-gray-200 py-4 mt-auto">
+      <div className="container mx-auto flex flex-col items-center justify-center px-4 space-y-4 md:space-y-0">
+        
         {/* Logo, Contact Us, Phone Number, and Email */}
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col items-center md:flex-row md:space-x-4 text-center">
           <Image 
             src={logo} 
             alt="Perfecthomes Logo" 
             width={40} 
             height={40} 
-            className="rounded-full" // Makes the logo round
+            className="rounded-full mb-2 md:mb-0" // Makes the logo round and adjusts margin for spacing
           />
           <a href="/contact" className="text-blue-500 hover:underline">
             Contact Us
           </a>
-          <span className="text-gray-700">|</span> {/* Divider */}
-          <p className="text-gray-700">Phone: 254701029158 </p>
-          <span className="text-gray-700">|</span> {/* Divider */}
-          <p className="text-gray-700">Email: mnjosiah@gmail.com</p>
+          <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
+          <p className="text-gray-700">Phone: (123) 456-7890</p>
+          <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
+          <p className="text-gray-700">Email: info@perfecthomes.com</p>
         </div>
 
         {/* Copyright */}
-        <div className="text-center mt-4">
+        <div className="text-center">
           <p className="text-sm text-gray-500">
             &copy; 2024 Perfecthomes. All rights reserved.
           </p>
