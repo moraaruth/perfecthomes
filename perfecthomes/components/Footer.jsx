@@ -13,15 +13,15 @@ const Footer = () => {
             Contact Us
           </a>
           <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
-          <p className="text-gray-700">Phone: (123) 456-7890</p>
+          <p className="text-gray-700">Phone: 0707029158</p>
           <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
-          <p className="text-gray-700">Email: info@perfecthomes.com</p>
+          <p className="text-gray-700">Email: mnjosiah@gmail.com</p>
         </div>
 
         {/* Copyright */}
         <div className="text-center mt-2">
           <p className="text-sm text-gray-500">
-            &copy; 2024 Perfecthomes. All rights reserved.
+            &copy; 2024 perfecthomes. All rights reserved.
           </p>
         </div>
       </div>
