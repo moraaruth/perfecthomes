@@ -93,8 +93,8 @@ if(rates.sale){
           </div>
           <Link
             href={`/properties/${property._id}`}
-            className="h-[36px] text-white px-4 py-2 rounded-lg text-center text-sm transition-colors"
-            style={{ backgroundColor: '#800080' }}
+            className="h-[36px] text-white px-4 py-2 rounded-lg text-center text-sm"
+            style={{ backgroundColor: '#800080', transition: 'background-color 0.2s' }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#660066'}
             onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
           >
