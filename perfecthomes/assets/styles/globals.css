@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom theme colors */
+:root {
+  --primary-color: #800080;
+  --primary-hover: #660066;
+  --primary-light: #E6B3E6;
+}
+
+/* Override blue colors with purple */
+.text-blue-500 {
+  color: var(--primary-color) !important;
+}
+
+.bg-blue-500 {
+  background-color: var(--primary-color) !important;
+}
+
+.hover\:bg-blue-600:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+.bg-blue-50 {
+  background-color: #f3e8ff !important;
+}
+
+.border-blue-500 {
+  border-color: var(--primary-color) !important;
+}
