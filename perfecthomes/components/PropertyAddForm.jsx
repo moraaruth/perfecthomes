@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 
 const PropertyAddForm = () => {
-  const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -30,9 +29,7 @@ const PropertyAddForm = () => {
     images: [],
   });
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,8 +96,11 @@ const PropertyAddForm = () => {
     }));
   };
 
+  if (typeof window === 'undefined') {
+    return <div>Loading...</div>;
+  }
+
   return (
-    mounted && (
       <form
         action='/api/properties'
         method='POST'
@@ -122,6 +122,7 @@ const PropertyAddForm = () => {
             value={fields.type}
             onChange={handleChange}
           >
+            <option value=''>Select Property Type</option>
             <option value='Apartment'>Apartment</option>
             <option value='House'>House</option>
             <option value='Room'>Room</option>
@@ -577,7 +578,6 @@ const PropertyAddForm = () => {
           </button>
         </div>
       </form>
-    )
   );
 };
 export default PropertyAddForm;
