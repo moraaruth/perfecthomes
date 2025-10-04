@@ -94,9 +94,13 @@ if(rates.sale){
           <Link
             href={`/properties/${property._id}`}
             className="h-[36px] text-white px-4 py-2 rounded-lg text-center text-sm"
-            style={{ backgroundColor: '#800080', transition: 'background-color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#660066'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
+            style={{ 
+              backgroundColor: '#800080 !important', 
+              transition: 'background-color 0.2s',
+              border: 'none'
+            }}
+            onMouseEnter={(e) => e.target.style.setProperty('background-color', '#660066', 'important')}
+            onMouseLeave={(e) => e.target.style.setProperty('background-color', '#800080', 'important')}
           >
             Details
           </Link>
