@@ -5,29 +5,21 @@ import Link from 'next/link';
 import {FaBed, FaBath, FaRulerCombined, FaMoneyBill, FaMapMarker } from 'react-icons/fa';
 
 const PropertyCard = ({ property }) => {
+  if (!property) return null;
 
   const getRateDisplay = () => {
     const { rates } = property;
-if(rates.sale){
-  return `${rates.sale.toLocaleString()}`;
-}
-    // if (rates.monthly) {
-    //   return `${rates.monthly.toLocaleString()}/mo`;
-    // } else if (rates.weekly) {
-    //   return `${rates.weekly.toLocaleString()}/wk`;
-    // }  else if (rates.sale) {
-    //   return `${rates.sale.toLocaleString()}/sale`;
-    // } else if (rates.daily) {
-    //   return `${rates.daily.toLocaleString()}/night`;
-
-    // }
+    if(rates?.sale){
+      return `${rates.sale.toLocaleString()}`;
+    }
+    return 'N/A';
   }
   return (
     <div className="rounded-xl shadow-md relative">
 
       <Image
-        src={property.images[0]}
-        alt=""
+        src={property.images?.[0] || '/placeholder.jpg'}
+        alt={property.name || 'Property'}
         height={0}
         width={0}
         sizes='100vw'
@@ -35,8 +27,8 @@ if(rates.sale){
       />
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
-          <div className="text-gray-600">{property.type}</div>
-          <h3 className="text-xl font-bold">{property.name}</h3>
+          <div className="text-gray-600">{property.type || 'Property'}</div>
+          <h3 className="text-xl font-bold">{property.name || 'Unnamed Property'}</h3>
         </div>
         <h3
           className="absolute top-[10px] right-[10px] bg-white px-4 py-2 rounded-lg font-bold text-right md:text-center lg:text-right"
@@ -47,16 +39,16 @@ if(rates.sale){
 
         <div className="flex justify-center gap-4 text-gray-500 mb-4">
           <p>
-            <FaBed className='inline mr-2'/> {property.beds} {' '}
+            <FaBed className='inline mr-2'/> {property.beds || 0} {' '}
             <span className="md:hidden lg:inline">Beds</span>
           </p>
           <p>
-          <FaBath className='inline mr-2'/> {property.baths}{ ' '}
+          <FaBath className='inline mr-2'/> {property.baths || 0}{ ' '}
             <span className="md:hidden lg:inline">Baths</span>
           </p>
           <p>
           <FaRulerCombined className='inline mr-2'/>
-            {property.square_feet} <span className="md:hidden lg:inline">sqft</span>
+            {property.square_feet || 0} <span className="md:hidden lg:inline">sqft</span>
           </p>
         </div>
 
@@ -71,7 +63,7 @@ if(rates.sale){
             <p><FaMoneyBill className='inline mr-2'/> Weekly </p>
 
           )} */}
-            { property.rates.sale && (
+            { property.rates?.sale && (
             <p><FaMoneyBill className='inline mr-2'/> Sale </p>
 
           )}
@@ -89,7 +81,7 @@ if(rates.sale){
           <div className="flex align-middle gap-2 mb-4 lg:mb-0">
             <FaMapMarker className='text-orange-700' />
             
-            <span className="text-orange-700"> {property.location.city} {property.location.state}</span>
+            <span className="text-orange-700"> {property.location?.city || 'Unknown'} {property.location?.state || ''}</span>
           </div>
           <Link
             href={`/properties/${property._id}`}

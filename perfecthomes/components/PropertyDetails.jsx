@@ -9,6 +9,8 @@ import {
 import PropertyMap from '@/components/PropertyMap';
 
 const PropertyDetails = ({ property }) => {
+  if (!property) return <div>Loading...</div>;
+  
   return (
     <main>
       <div className='bg-white p-6 rounded-lg shadow-md text-center md:text-left'>
