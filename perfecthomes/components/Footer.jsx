@@ -1,28 +1,87 @@
 import logo from '@/assets/images/logo.jpg';
 import Image from 'next/image';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHome } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 py-4 mt-auto">
-      <div className="container mx-auto flex flex-col items-center justify-center px-4 space-y-4 md:space-y-0">
-        
-        {/* Logo, Contact Us, Phone Number, and Email */}
-        <div className="flex flex-col items-center md:flex-row md:space-x-4 text-center">
-         
-          <a href="/contact" className="text-blue-500 hover:underline">
-            Contact Us
-          </a>
-          <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
-          <p className="text-gray-700">Phone: 0707029158</p>
-          <span className="text-gray-700 hidden md:inline">|</span> {/* Divider only for large screens */}
-          <p className="text-gray-700">Email: mnjosiah@gmail.com</p>
+    <footer className="text-white py-16 mt-auto" style={{ backgroundColor: '#800080' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          
+          {/* Company Info */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Image 
+                className="h-12 w-12 rounded-full" 
+                src={logo} 
+                alt="Perfect Homes" 
+              />
+              <h3 className="text-2xl font-bold ml-3">Perfect Homes</h3>
+            </div>
+            <p className="text-purple-100 mb-6 max-w-md">
+              Your trusted partner in finding the perfect home. We connect property seekers 
+              with their dream homes across Kenya with professional service and expertise.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-purple-200 hover:text-white transition-colors">
+                <FaFacebook size={24} />
+              </a>
+              <a href="#" className="text-purple-200 hover:text-white transition-colors">
+                <FaTwitter size={24} />
+              </a>
+              <a href="#" className="text-purple-200 hover:text-white transition-colors">
+                <FaInstagram size={24} />
+              </a>
+              <a href="#" className="text-purple-200 hover:text-white transition-colors">
+                <FaLinkedin size={24} />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
+              <li><a href="/" className="text-purple-200 hover:text-white transition-colors">Home</a></li>
+              <li><a href="/about" className="text-purple-200 hover:text-white transition-colors">About Us</a></li>
+              <li><a href="/properties" className="text-purple-200 hover:text-white transition-colors">Properties</a></li>
+              <li><a href="/book-view" className="text-purple-200 hover:text-white transition-colors">Book For View</a></li>
+              <li><a href="/contact" className="text-purple-200 hover:text-white transition-colors">Contact Us</a></li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <FaPhone className="mr-3 text-purple-200" />
+                <span className="text-purple-100">+254701029158</span>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="mr-3 text-purple-200" />
+                <span className="text-purple-100">mnjosiah@gmail.com</span>
+              </div>
+              <div className="flex items-center">
+                <FaMapMarkerAlt className="mr-3 text-purple-200" />
+                <span className="text-purple-100">Westland, Nairobi</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Copyright */}
-        <div className="text-center mt-2">
-          <p className="text-sm text-gray-500">
-            &copy; 2024 perfecthomes. All rights reserved.
-          </p>
+        {/* Bottom Bar */}
+        <div className="border-t border-purple-400 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-purple-200 text-sm">
+              &copy; 2024 Perfect Homes. All rights reserved.
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Privacy Policy</a>
+              <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Terms of Service</a>
+              <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Cookie Policy</a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

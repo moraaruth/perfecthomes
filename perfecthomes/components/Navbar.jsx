@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import logo from '@/assets/images/logo.jpg'
-// import logo from '@/assets/images/logo.jpg';
+import profileDefault from '@/assets/images/profile.png'
 import { FaGoogle } from 'react-icons/fa'
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 import UnreadMessageCount from './UnreadMessageCount';
@@ -12,6 +12,10 @@ import UnreadMessageCount from './UnreadMessageCount';
 const Navbar = () => {
   const { data: session } = useSession()
   const profileImage = session?.user?.image
+  
+  // Admin emails list
+  const adminEmails = ['mnjosiah@gmail.com', 'iammoraaruth@gmail.com'] 
+  const isAdmin = session?.user?.email && adminEmails.includes(session.user.email)
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
@@ -29,10 +33,10 @@ const Navbar = () => {
   }, [])
 
   return (
-    <nav className="bg-blue-700 border-b border-blue-500">
+    <nav className="bg-white border-b border-gray-200">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-20 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
+        <div className="relative flex h-16 items-center justify-between">
+          <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
             {/* <!-- Mobile menu button--> */}
             <button
               type="button"
@@ -71,36 +75,156 @@ const Navbar = () => {
               style={{ borderRadius: '50%' }}
               />
 
-              <span className="hidden md:block text-white text-2xl font-bold ml-2">
+              <span className="hidden md:block text-2xl font-bold ml-2" style={{ color: '#800080' }}>
                 Perfect Homes
               </span>
             </Link>
             {/* <!-- Desktop Menu Hidden below md screens --> */}
-            <div className="hidden md:ml-6 md:block">
+            <div className="hidden lg:ml-6 lg:block">
               <div className="flex space-x-2">
                 <Link
                   href="/"
                   className={`${
-                    pathname === '/' ? 'bg-black' : ''
-                  } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                    pathname === '/' ? 'text-white' : 'hover:text-white'
+                  } rounded-md px-3 py-2`}
+                  style={{
+                    color: pathname === '/' ? 'white' : '#800080',
+                    backgroundColor: pathname === '/' ? '#800080' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== '/') {
+                      e.target.style.backgroundColor = '#800080'
+                      e.target.style.color = 'white'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== '/') {
+                      e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#800080'
+                    }
+                  }}
                 >
                   Home
                 </Link>
                 <Link
+                  href="/about"
+                  className={`${
+                    pathname === '/about' ? 'text-white' : 'hover:text-white'
+                  } rounded-md px-3 py-2`}
+                  style={{
+                    color: pathname === '/about' ? 'white' : '#800080',
+                    backgroundColor: pathname === '/about' ? '#800080' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== '/about') {
+                      e.target.style.backgroundColor = '#800080'
+                      e.target.style.color = 'white'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== '/about') {
+                      e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#800080'
+                    }
+                  }}
+                >
+                  About Us
+                </Link>
+                <Link
                   href="/properties"
                   className={`${
-                    pathname === '/properties' ? 'bg-black' : ''
-                  } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                    pathname === '/properties' ? 'text-white' : 'hover:text-white'
+                  } rounded-md px-3 py-2`}
+                  style={{
+                    color: pathname === '/properties' ? 'white' : '#800080',
+                    backgroundColor: pathname === '/properties' ? '#800080' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== '/properties') {
+                      e.target.style.backgroundColor = '#800080'
+                      e.target.style.color = 'white'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== '/properties') {
+                      e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#800080'
+                    }
+                  }}
                 >
                   Properties
                 </Link>
+                <Link
+                  href="/book-view"
+                  className={`${
+                    pathname === '/book-view' ? 'text-white' : 'hover:text-white'
+                  } rounded-md px-3 py-2`}
+                  style={{
+                    color: pathname === '/book-view' ? 'white' : '#800080',
+                    backgroundColor: pathname === '/book-view' ? '#800080' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== '/book-view') {
+                      e.target.style.backgroundColor = '#800080'
+                      e.target.style.color = 'white'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== '/book-view') {
+                      e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#800080'
+                    }
+                  }}
+                >
+                  Book For View
+                </Link>
+                <Link
+                  href="/contact"
+                  className={`${
+                    pathname === '/contact' ? 'text-white' : 'hover:text-white'
+                  } rounded-md px-3 py-2`}
+                  style={{
+                    color: pathname === '/contact' ? 'white' : '#800080',
+                    backgroundColor: pathname === '/contact' ? '#800080' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== '/contact') {
+                      e.target.style.backgroundColor = '#800080'
+                      e.target.style.color = 'white'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== '/contact') {
+                      e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#800080'
+                    }
+                  }}
+                >
+                  Contact Us
+                </Link>
               
-                {session && (
+                {isAdmin && (
                   <Link
                     href="/properties/add"
                     className={`${
-                      pathname === '/properties/add' ? 'bg-black' : ''
-                    } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                      pathname === '/properties/add' ? 'text-white' : 'hover:text-white'
+                    } rounded-md px-3 py-2`}
+                    style={{
+                      color: pathname === '/properties/add' ? 'white' : '#800080',
+                      backgroundColor: pathname === '/properties/add' ? '#800080' : 'transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (pathname !== '/properties/add') {
+                        e.target.style.backgroundColor = '#800080'
+                        e.target.style.color = 'white'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (pathname !== '/properties/add') {
+                        e.target.style.backgroundColor = 'transparent'
+                        e.target.style.color = '#800080'
+                      }
+                    }}
                   >
                     Add Property
                   </Link>
@@ -111,17 +235,24 @@ const Navbar = () => {
 
           {/* <!-- Right Side Menu (Logged Out) --> */}
           {!session && (
-            <div className="hidden md:block md:ml-6">
+            <div className="hidden lg:block lg:ml-6">
               <div className="flex items-center">
                 {providers &&
                   Object.values(providers).map((provider, index) => (
                     <button
                       onClick={() => signIn(provider.id)}
                       key={index}
-                      className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                      className="flex items-center text-white rounded-md px-3 py-2"
+                      style={{ backgroundColor: '#800080' }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = '#660066'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = '#800080'
+                      }}
                     >
                       <FaGoogle className="text-white mr-2" />
-                      <span>Login or Register</span>
+                      <span>Admin Login</span>
                     </button>
                   ))}
               </div>
@@ -130,7 +261,7 @@ const Navbar = () => {
 
           {/* <!-- Right Side Menu (Logged In) --> */}
           {session && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 lg:static lg:inset-auto lg:ml-6 lg:pr-0">
               <Link href="/messages" className="relative group">
                 <button
                   type="button"
@@ -238,26 +369,68 @@ const Navbar = () => {
           <div className="space-y-1 px-2 pb-3 pt-2">
             <Link
               href="/"
-              className={`${
-                pathname === '/' ? 'bg-black' : ''
-              } text-white block rounded-md px-3 py-2 text-base font-medium`}
+              className={`block rounded-md px-3 py-2 text-base font-medium`}
+              style={{
+                color: pathname === '/' ? 'white' : '#800080',
+                backgroundColor: pathname === '/' ? '#800080' : 'transparent'
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
+              href="/about"
+              className={`block rounded-md px-3 py-2 text-base font-medium`}
+              style={{
+                color: pathname === '/about' ? 'white' : '#800080',
+                backgroundColor: pathname === '/about' ? '#800080' : 'transparent'
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              About Us
+            </Link>
+            <Link
               href="/properties"
-              className={`${
-                pathname === '/properties' ? 'bg-black' : ''
-              } text-white block rounded-md px-3 py-2 text-base font-medium`}
+              className={`block rounded-md px-3 py-2 text-base font-medium`}
+              style={{
+                color: pathname === '/properties' ? 'white' : '#800080',
+                backgroundColor: pathname === '/properties' ? '#800080' : 'transparent'
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Properties
             </Link>
-            {session && (
+            <Link
+              href="/book-view"
+              className={`block rounded-md px-3 py-2 text-base font-medium`}
+              style={{
+                color: pathname === '/book-view' ? 'white' : '#800080',
+                backgroundColor: pathname === '/book-view' ? '#800080' : 'transparent'
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Book For View
+            </Link>
+            <Link
+              href="/contact"
+              className={`block rounded-md px-3 py-2 text-base font-medium`}
+              style={{
+                color: pathname === '/contact' ? 'white' : '#800080',
+                backgroundColor: pathname === '/contact' ? '#800080' : 'transparent'
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact Us
+            </Link>
+            {isAdmin && (
               <Link
                 href="/properties/add"
-                className={`${
-                  pathname === '/properties/add' ? 'bg-black' : ''
-                } text-white block rounded-md px-3 py-2 text-base font-medium`}
+                className={`block rounded-md px-3 py-2 text-base font-medium`}
+                style={{
+                  color: pathname === '/properties/add' ? 'white' : '#800080',
+                  backgroundColor: pathname === '/properties/add' ? '#800080' : 'transparent'
+                }}
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Add Property
               </Link>
@@ -267,11 +440,16 @@ const Navbar = () => {
               providers &&
               Object.values(providers).map((provider, index) => (
                 <button
-                  onClick={() => signIn(provider.id)}
+                  onClick={() => {
+                    signIn(provider.id)
+                    setIsMobileMenuOpen(false)
+                  }}
                   key={index}
-                  className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                  className="flex items-center text-white rounded-md px-3 py-2 w-full"
+                  style={{ backgroundColor: '#800080' }}
                 >
-                  <span>Login or Register</span>
+                  <FaGoogle className="text-white mr-2" />
+                  <span>Admin Login</span>
                 </button>
               ))}
           </div>

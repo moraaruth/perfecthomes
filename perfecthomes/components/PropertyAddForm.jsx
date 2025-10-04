@@ -162,8 +162,8 @@ const PropertyAddForm = () => {
           ></textarea>
         </div>
 
-        <div className='mb-4 bg-blue-50 p-4'>
-          <label className='block text-gray-700 font-bold mb-2'>Location</label>
+        <div className='mb-4 p-4' style={{ backgroundColor: '#800080' }}>
+          <label className='block text-white font-bold mb-2'>Location</label>
           <input
             type='text'
             id='street'
@@ -433,8 +433,8 @@ const PropertyAddForm = () => {
           </div>
         </div>
 
-        <div className='mb-4 bg-blue-50 p-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
+        <div className='mb-4 p-4' style={{ backgroundColor: '#800080' }}>
+          <label className='block text-white font-bold mb-2'>
             Rates (Leave blank if not applicable)
           </label>
           <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4'>
@@ -567,7 +567,10 @@ const PropertyAddForm = () => {
 
         <div>
           <button
-            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+            className='text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+            style={{ backgroundColor: '#800080' }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#660066'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
             type='submit'
           >
             Add Property
