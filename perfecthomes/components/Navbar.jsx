@@ -32,6 +32,12 @@ const Navbar = () => {
     setAuthProviders()
   }, [])
 
+  // Debug logging
+  useEffect(() => {
+    console.log('Session:', session)
+    console.log('User email:', session?.user?.email)
+  }, [session])
+
   return (
     <nav className="bg-white border-b border-gray-200">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -203,7 +209,7 @@ const Navbar = () => {
                   Contact Us
                 </Link>
               
-                {isAdmin && (
+                {session && (
                   <Link
                     href="/properties/add"
                     className={`${
@@ -422,7 +428,7 @@ const Navbar = () => {
             >
               Contact Us
             </Link>
-            {isAdmin && (
+            {session && (
               <Link
                 href="/properties/add"
                 className={`block rounded-md px-3 py-2 text-base font-medium`}
