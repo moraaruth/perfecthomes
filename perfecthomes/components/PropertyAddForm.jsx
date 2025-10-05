@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 const PropertyAddForm = () => {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -29,6 +30,14 @@ const PropertyAddForm = () => {
     },
     images: [],
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div>Loading...</div>;
+  }
 
 
 
