@@ -96,9 +96,7 @@ const PropertyAddForm = () => {
     }));
   };
 
-  if (typeof window === 'undefined') {
-    return <div>Loading...</div>;
-  }
+
 
   return (
       <form

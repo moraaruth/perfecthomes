@@ -10,7 +10,7 @@ import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 import UnreadMessageCount from './UnreadMessageCount';
 
 const Navbar = () => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const profileImage = session?.user?.image
   
   // Admin emails list
@@ -35,8 +35,22 @@ const Navbar = () => {
   // Debug logging
   useEffect(() => {
     console.log('Session:', session)
+    console.log('Session status:', status)
     console.log('User email:', session?.user?.email)
-  }, [session])
+  }, [session, status])
+
+  // Prevent render if session is loading
+  if (status === 'loading') {
+    return (
+      <nav className="bg-white border-b border-gray-200">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="relative flex h-16 items-center justify-between">
+            <div>Loading...</div>
+          </div>
+        </div>
+      </nav>
+    )
+  }
 
   return (
     <nav className="bg-white border-b border-gray-200">
