@@ -1,7 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const PropertyAddForm = () => {
+  const router = useRouter();
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -9,7 +11,6 @@ const PropertyAddForm = () => {
     location: {
       street: '',
       city: '',
-  
     },
     beds: '',
     baths: '',
@@ -96,14 +97,55 @@ const PropertyAddForm = () => {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const formData = new FormData();
+      
+      // Add all form fields to FormData
+      formData.append('type', fields.type);
+      formData.append('name', fields.name);
+      formData.append('description', fields.description);
+      formData.append('location.street', fields.location.street);
+      formData.append('location.city', fields.location.city);
+      formData.append('beds', fields.beds);
+      formData.append('baths', fields.baths);
+      formData.append('square_feet', fields.square_feet);
+      formData.append('rates.sale', fields.rates.sale);
+      formData.append('seller_info.name', fields.seller_info.name);
+      formData.append('seller_info.email', fields.seller_info.email);
+      formData.append('seller_info.phone', fields.seller_info.phone);
+      
+      // Add amenities
+      fields.amenities.forEach(amenity => {
+        formData.append('amenities', amenity);
+      });
+      
+      // Add images
+      fields.images.forEach(image => {
+        formData.append('images', image);
+      });
+      
+      const response = await fetch('/api/properties', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (response.ok) {
+        router.push('/properties');
+      } else {
+        console.error('Failed to add property');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
 
 
   return (
-      <form
-        action='/api/properties'
-        method='POST'
-        encType='multipart/form-data'
-      >
+      <form onSubmit={handleSubmit}>
         <h2 className='text-3xl text-center font-semibold mb-6'>
           Add Property
         </h2>
