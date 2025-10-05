@@ -32,17 +32,23 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
   try {
+    console.log('POST /api/properties - Starting request');
     await connectDB();
+    console.log('Database connected');
 
     const sessionUser = await getSessionUser();
+    console.log('Session user:', sessionUser);
 
     if (!sessionUser || !sessionUser.userId) {
+      console.log('No session user or userId');
       return new Response('User ID is required', { status: 401 });
     }
 
     const { userId } = sessionUser;
+    console.log('User ID:', userId);
 
     const formData = await request.formData();
+    console.log('Form data received');
 
     // Access all values from amenities and images
     const amenities = formData.getAll('amenities');
@@ -78,51 +84,15 @@ export const POST = async (request) => {
       owner: userId,
     };
 
+    // Skip image upload for now to test basic functionality
+    console.log('Images received:', images.length);
+    propertyData.images = []; // Empty array for now
     
-    // Upload image(s) to Cloudinary
-    const uploadImagesToCloudinary = async (images) => {
-      // Helper function to upload a single image
-      const uploadImage = async (image) => {
-        const imageBuffer = await image.arrayBuffer();
-        const imageArray = Array.from(new Uint8Array(imageBuffer));
-        const imageData = Buffer.from(imageArray);
-    
-        // Determine the image type dynamically
-        const imageType = image.type.split('/')[1]; // 'png', 'jpg', etc.
-    
-        // Convert the image data to base64
-        const imageBase64 = imageData.toString('base64');
-    
-        // Make request to upload to Cloudinary
-        const result = await cloudinary.uploader.upload(
-          `data:image/${imageType};base64,${imageBase64}`,
-          {
-            folder: 'propertypulse'
-          }
-        );
-    
-        return result.secure_url;
-      };
-    
-      // Create an array of promises for each image upload
-      const imageUploadPromises = images.map(uploadImage);
-    
-      try {
-        // Wait for all images to upload concurrently
-        const uploadedImages = await Promise.all(imageUploadPromises);
-        // Add uploaded images to the propertyData object
-        propertyData.images = uploadedImages;
-        console.log('Images successfully uploaded:', uploadedImages);
-      } catch (error) {
-        console.error('Failed to upload one or more images:', error);
-      }
-    };
-    
-    // Call the function to upload images
-    await uploadImagesToCloudinary(images);
-    
+    console.log('Property data to save:', propertyData);
     const newProperty = new Property(propertyData);
+    console.log('Property model created');
     await newProperty.save();
+    console.log('Property saved successfully');
 
     //return Response.redirect(
    //   `${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`
@@ -133,6 +103,7 @@ return Response.redirect(`/properties/${newProperty._id}`);
     //   status: 200,
     // });
   } catch (error) {
-    return new Response('Failed to add property', { status: 500 });
+    console.error('POST /api/properties error:', error);
+    return new Response(`Failed to add property: ${error.message}`, { status: 500 });
   }
 };
