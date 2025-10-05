@@ -32,15 +32,27 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
   try {
+    console.log('POST /api/properties - Starting request');
     await connectDB();
+    console.log('Database connected');
 
     const sessionUser = await getSessionUser();
+    console.log('Session user:', sessionUser);
 
     if (!sessionUser || !sessionUser.userId) {
+      console.log('No session user or userId');
       return new Response('User ID is required', { status: 401 });
     }
 
+    // Check if user is admin
+    const adminEmails = ['mnjosiah@gmail.com', 'iammoraaruth@gmail.com'];
+    if (!adminEmails.includes(sessionUser.user.email)) {
+      console.log('User not admin:', sessionUser.user.email);
+      return new Response('Unauthorized - Admin access required', { status: 403 });
+    }
+
     const { userId } = sessionUser;
+    console.log('User ID:', userId);
 
     const formData = await request.formData();
 

@@ -223,7 +223,7 @@ const Navbar = () => {
                   Contact Us
                 </Link>
               
-                {session && (
+                {isAdmin && (
                   <Link
                     href="/properties/add"
                     className={`${
@@ -272,7 +272,7 @@ const Navbar = () => {
                       }}
                     >
                       <FaGoogle className="text-white mr-2" />
-                      <span>Admin Login</span>
+                      <span>P</span>
                     </button>
                   ))}
               </div>
@@ -442,7 +442,7 @@ const Navbar = () => {
             >
               Contact Us
             </Link>
-            {session && (
+            {isAdmin && (
               <Link
                 href="/properties/add"
                 className={`block rounded-md px-3 py-2 text-base font-medium`}
@@ -469,7 +469,7 @@ const Navbar = () => {
                   style={{ backgroundColor: '#800080' }}
                 >
                   <FaGoogle className="text-white mr-2" />
-                  <span>Admin Login</span>
+                  <span>P</span>
                 </button>
               ))}
           </div>
