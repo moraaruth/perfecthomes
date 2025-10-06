@@ -587,7 +587,7 @@ const PropertyAddForm = () => {
             htmlFor='seller_phone'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Phonessssss
+            Seller Phone
           </label>
           <input
             type='tel'
@@ -627,7 +627,7 @@ const PropertyAddForm = () => {
             onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
             type='submit'
           >
-            Add Property
+            Add Propertys
           </button>
         </div>
       </form>
