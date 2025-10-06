@@ -132,9 +132,9 @@ const PropertyAddForm = () => {
       });
       
       // Add images
-      fields.images.forEach(image => {
-        formData.append('images', image);
-      });
+      // fields.images.forEach(image => {
+      //   formData.append('images', image);
+      // });
       
       const response = await fetch('/api/properties', {
         method: 'POST',
@@ -600,7 +600,7 @@ const PropertyAddForm = () => {
           />
         </div>
 
-        <div className='mb-4'>
+        {/* <div className='mb-4'>
           <label
             htmlFor='images'
             className='block text-gray-700 font-bold mb-2'
@@ -617,7 +617,7 @@ const PropertyAddForm = () => {
             onChange={handleImageChange}
             required
           />
-        </div>
+        </div> */}
 
         <div>
           <button
