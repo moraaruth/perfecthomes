@@ -144,10 +144,13 @@ const PropertyAddForm = () => {
       if (response.ok) {
         router.push('/properties');
       } else {
-        console.error('Failed to add property');
+        const errorText = await response.text();
+        console.error('Failed to add property:', response.status, errorText);
+        alert(`Failed to add property: ${errorText}`);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      alert('Error submitting form. Please try again.');
     }
   };
 

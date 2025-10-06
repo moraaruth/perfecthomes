@@ -80,7 +80,7 @@ export const POST = async (request) => {
         weekly: formData.get('rates.weekly'),
         sale: formData.get('rates.sale'),
         monthly: formData.get('rates.monthly'),
-        nightly: formData.get('rates.nightly.'),
+        nightly: formData.get('rates.nightly'),
       },
       seller_info: {
         name: formData.get('seller_info.name'),
@@ -145,6 +145,7 @@ return Response.redirect(`/properties/${newProperty._id}`);
     //   status: 200,
     // });
   } catch (error) {
+    console.error('Error adding property:', error);
     return new Response('Failed to add property', { status: 500 });
   }
 };
