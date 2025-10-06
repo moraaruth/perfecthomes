@@ -185,7 +185,7 @@ const PropertyAddForm = () => {
         </div>
         <div className='mb-4'>
           <label className='block text-gray-700 font-bold mb-2'>
-            Listing Name
+            Listing Names
           </label>
           <input
             type='text'
