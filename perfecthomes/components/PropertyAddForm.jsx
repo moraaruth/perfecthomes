@@ -142,11 +142,12 @@ const PropertyAddForm = () => {
       });
       
       if (response.ok) {
-        router.push('/properties');
+        const result = await response.json();
+        router.push(result.redirectUrl || '/properties');
       } else {
-        const errorText = await response.text();
-        console.error('Failed to add property:', response.status, errorText);
-        alert(`Failed to add property: ${errorText}`);
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Failed to add property:', response.status, errorData);
+        alert(`Failed to add property: ${errorData.message || errorData.error}`);
       }
     } catch (error) {
       console.error('Error submitting form:', error);

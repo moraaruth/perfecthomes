@@ -6,6 +6,9 @@ import cloudinary from '@/config/cloudinary';
 // GET /api/properties
 export const GET = async (request) => {
   try {
+    if (!process.env.MONGODB_URI || process.env.MONGODB_URI === 'your_mongodb_connection_string_here') {
+      return new Response('Database not configured', { status: 500 });
+    }
     await connectDB();
 
     const page = request.nextUrl.searchParams.get('page') || 1;
@@ -25,17 +28,21 @@ export const GET = async (request) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
-    return new Response('Something Went Wrong', { status: 500 });
+    console.error('GET /api/properties error:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Something Went Wrong', 
+      message: error.message 
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
 
 export const POST = async (request) => {
   try {
     console.log('POST /api/properties - Starting request');
-    await connectDB();
-    console.log('Database connected');
-
+    
     const sessionUser = await getSessionUser();
     console.log('Session user:', sessionUser);
 
@@ -50,6 +57,12 @@ export const POST = async (request) => {
       console.log('User not admin:', sessionUser.user.email);
       return new Response('Unauthorized - Admin access required', { status: 403 });
     }
+
+    if (!process.env.MONGODB_URI || process.env.MONGODB_URI === 'your_mongodb_connection_string_here') {
+      return new Response('Database not configured', { status: 500 });
+    }
+    await connectDB();
+    console.log('Database connected');
 
     const { userId } = sessionUser;
     console.log('User ID:', userId);
@@ -136,16 +149,24 @@ export const POST = async (request) => {
     const newProperty = new Property(propertyData);
     await newProperty.save();
 
-    //return Response.redirect(
-   //   `${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`
-    //);
-return Response.redirect(`/properties/${newProperty._id}`);
-
-    // return new Response(JSON.stringify({ message: 'Success' }), {
-    //   status: 200,
-    // });
+    return new Response(JSON.stringify({ 
+      message: 'Property added successfully',
+      propertyId: newProperty._id,
+      redirectUrl: `/properties/${newProperty._id}`
+    }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Error adding property:', error);
-    return new Response('Failed to add property', { status: 500 });
+    console.error('Error stack:', error.stack);
+    return new Response(JSON.stringify({ 
+      error: 'Failed to add property', 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
