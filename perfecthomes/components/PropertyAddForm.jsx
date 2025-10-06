@@ -587,7 +587,7 @@ const PropertyAddForm = () => {
             htmlFor='seller_phone'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Phone
+            Seller Phonessssss
           </label>
           <input
             type='tel'
