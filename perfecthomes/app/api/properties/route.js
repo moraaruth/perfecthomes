@@ -71,9 +71,9 @@ export const POST = async (request) => {
 
     // Access all values from amenities and images
     const amenities = formData.getAll('amenities');
-    const images = formData
-      .getAll('images')
-      .filter((image) => image.name !== '');
+    // const images = formData
+    //   .getAll('images')
+    //   .filter((image) => image.name !== '');
 
     // Create propertyData object for database
     const propertyData = {
@@ -105,46 +105,49 @@ export const POST = async (request) => {
 
     
     // Upload image(s) to Cloudinary
-    const uploadImagesToCloudinary = async (images) => {
-      // Helper function to upload a single image
-      const uploadImage = async (image) => {
-        const imageBuffer = await image.arrayBuffer();
-        const imageArray = Array.from(new Uint8Array(imageBuffer));
-        const imageData = Buffer.from(imageArray);
+    // const uploadImagesToCloudinary = async (images) => {
+    //   // Helper function to upload a single image
+    //   const uploadImage = async (image) => {
+    //     const imageBuffer = await image.arrayBuffer();
+    //     const imageArray = Array.from(new Uint8Array(imageBuffer));
+    //     const imageData = Buffer.from(imageArray);
     
-        // Determine the image type dynamically
-        const imageType = image.type.split('/')[1]; // 'png', 'jpg', etc.
+    //     // Determine the image type dynamically
+    //     const imageType = image.type.split('/')[1]; // 'png', 'jpg', etc.
     
-        // Convert the image data to base64
-        const imageBase64 = imageData.toString('base64');
+    //     // Convert the image data to base64
+    //     const imageBase64 = imageData.toString('base64');
     
-        // Make request to upload to Cloudinary
-        const result = await cloudinary.uploader.upload(
-          `data:image/${imageType};base64,${imageBase64}`,
-          {
-            folder: 'propertypulse'
-          }
-        );
+    //     // Make request to upload to Cloudinary
+    //     const result = await cloudinary.uploader.upload(
+    //       `data:image/${imageType};base64,${imageBase64}`,
+    //       {
+    //         folder: 'propertypulse'
+    //       }
+    //     );
     
-        return result.secure_url;
-      };
+    //     return result.secure_url;
+    //   };
     
-      // Create an array of promises for each image upload
-      const imageUploadPromises = images.map(uploadImage);
+    //   // Create an array of promises for each image upload
+    //   const imageUploadPromises = images.map(uploadImage);
     
-      try {
-        // Wait for all images to upload concurrently
-        const uploadedImages = await Promise.all(imageUploadPromises);
-        // Add uploaded images to the propertyData object
-        propertyData.images = uploadedImages;
-        console.log('Images successfully uploaded:', uploadedImages);
-      } catch (error) {
-        console.error('Failed to upload one or more images:', error);
-      }
-    };
+    //   try {
+    //     // Wait for all images to upload concurrently
+    //     const uploadedImages = await Promise.all(imageUploadPromises);
+    //     // Add uploaded images to the propertyData object
+    //     propertyData.images = uploadedImages;
+    //     console.log('Images successfully uploaded:', uploadedImages);
+    //   } catch (error) {
+    //     console.error('Failed to upload one or more images:', error);
+    //   }
+    // };
     
     // Call the function to upload images
-    await uploadImagesToCloudinary(images);
+    // await uploadImagesToCloudinary(images);
+    
+    // Add empty images array for now
+    propertyData.images = [];
     
     const newProperty = new Property(propertyData);
     await newProperty.save();

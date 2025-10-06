@@ -28,7 +28,7 @@ const PropertyAddForm = () => {
       email: '',
       phone: '',
     },
-    images: [],
+    // images: [],
   });
 
   useEffect(() => {
@@ -88,23 +88,23 @@ const PropertyAddForm = () => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const { files } = e.target;
+  // const handleImageChange = (e) => {
+  //   const { files } = e.target;
 
-    // Clone images array
-    const updatedImages = [...fields.images];
+  //   // Clone images array
+  //   const updatedImages = [...fields.images];
 
-    // Add new files to the array
-    for (const file of files) {
-      updatedImages.push(file);
-    }
+  //   // Add new files to the array
+  //   for (const file of files) {
+  //     updatedImages.push(file);
+  //   }
 
-    // Update state with array of images
-    setFields((prevFields) => ({
-      ...prevFields,
-      images: updatedImages,
-    }));
-  };
+  //   // Update state with array of images
+  //   setFields((prevFields) => ({
+  //     ...prevFields,
+  //     images: updatedImages,
+  //   }));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -600,6 +600,24 @@ const PropertyAddForm = () => {
           />
         </div>
 
+        {/* <div className='mb-4'>
+          <label
+            htmlFor='images'
+            className='block text-gray-700 font-bold mb-2'
+          >
+            Images (Select images)
+          </label>
+          <input
+            type='file'
+            id='images'
+            name='images'
+            className='border rounded w-full py-2 px-3'
+            accept='image/*'
+            multiple
+            onChange={handleImageChange}
+            required
+          />
+        </div> */}
 
         <div>
           <button
