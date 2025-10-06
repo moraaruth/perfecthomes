@@ -271,7 +271,7 @@ const Navbar = () => {
                         e.target.style.backgroundColor = '#800080'
                       }}
                     >
-                      <FaGoogle className="text-white mr-2" />
+                      {/* <FaGoogle className="text-white mr-2" /> */}
                       <span>P</span>
                     </button>
                   ))}
@@ -468,7 +468,7 @@ const Navbar = () => {
                   className="flex items-center text-white rounded-md px-3 py-2 w-full"
                   style={{ backgroundColor: '#800080' }}
                 >
-                  <FaGoogle className="text-white mr-2" />
+                  {/* <FaGoogle className="text-white mr-2" /> */}
                   <span>P</span>
                 </button>
               ))}
