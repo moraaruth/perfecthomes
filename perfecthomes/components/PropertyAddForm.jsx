@@ -134,13 +134,13 @@ const handleSubmit = async (e) => {
     }
 
     // ✅ Append images (uncomment if you’re handling Cloudinary uploads directly here)
-    /*
+    
     if (fields.images && fields.images.length > 0) {
       fields.images.forEach((image) => {
         formData.append('images', image);
       });
     }
-    */
+    
 
     // ✅ Send request
     const response = await fetch('/api/properties', {
