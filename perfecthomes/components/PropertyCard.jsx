@@ -84,18 +84,11 @@ const PropertyCard = ({ property }) => {
             <span className="text-orange-700"> {property.location?.city || 'Unknown'} {property.location?.state || ''}</span>
           </div>
           <Link
-            href={`/properties/${property._id}`}
-            className="h-[36px] text-white px-4 py-2 rounded-lg text-center text-sm"
-            style={{ 
-              backgroundColor: '#800080 !important', 
-              transition: 'background-color 0.2s',
-              border: 'none'
-            }}
-            onMouseEnter={(e) => e.target.style.setProperty('background-color', '#660066', 'important')}
-            onMouseLeave={(e) => e.target.style.setProperty('background-color', '#800080', 'important')}
-          >
-            Details
-          </Link>
+      href={`/properties/${property._id}`}
+      className="h-[36px] bg-[#800080] hover:bg-[#660066] text-white px-4 py-2 rounded-lg text-center text-sm font-medium transition-colors duration-200 block"
+    >
+      Details
+    </Link>
         </div>
       </div>
     </div>
