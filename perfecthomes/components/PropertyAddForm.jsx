@@ -88,23 +88,23 @@ const PropertyAddForm = () => {
     }));
   };
 
-  // const handleImageChange = (e) => {
-  //   const { files } = e.target;
+   const handleImageChange = (e) => {
+    const { files } = e.target;
 
   //   // Clone images array
-  //   const updatedImages = [...fields.images];
+    const updatedImages = [...fields.images];
 
   //   // Add new files to the array
-  //   for (const file of files) {
-  //     updatedImages.push(file);
-  //   }
+    for (const file of files) {
+      updatedImages.push(file);
+     }
 
   //   // Update state with array of images
-  //   setFields((prevFields) => ({
-  //     ...prevFields,
-  //     images: updatedImages,
-  //   }));
-  // };
+     setFields((prevFields) => ({
+       ...prevFields,
+       images: updatedImages,
+     }));
+   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
