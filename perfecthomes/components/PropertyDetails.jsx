@@ -1,3 +1,121 @@
+// import {
+//   FaBed,
+//   FaBath,
+//   FaRulerCombined,
+//   FaTimes,
+//   FaCheck,
+//   FaMapMarker,
+// } from 'react-icons/fa';
+// //import PropertyMap from '@/components/PropertyMap';
+
+// const PropertyDetails = ({ property }) => {
+//   if (!property) return <div>Loading...</div>;
+  
+//   return (
+//     <main>
+//       <div className='bg-white p-6 rounded-lg shadow-md text-center md:text-left'>
+//         <div className='text-gray-500 mb-4'>{property.type}</div>
+//         <h1 className='text-3xl font-bold mb-4'>{property.name}</h1>
+//         <div className='text-gray-500 mb-4 flex align-middle justify-center md:justify-start'>
+//           <FaMapMarker className='text-lg text-orange-700 mr-2' />
+//           <p className='text-orange-700'>
+//             {property.location.street}, {property.location.city}{' '}
+//             {property.location.state}
+//           </p>
+//         </div>
+
+//         <h3 className='text-lg font-bold my-6 bg-gray-800 text-white p-2'>
+//           Rates & Options
+//         </h3>
+//         <div className='flex flex-col md:flex-row justify-around'>
+//           {/* <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
+//             <div className='text-gray-500 mr-2 font-bold'>Daily</div>
+//             <div className='text-2xl font-bold text-blue-500'>
+//               {property.rates.daily ? (
+//                 `ksh${property.rates.daily.toLocaleString()}`
+//               ) : (
+//                 <FaTimes className='text-red-700' />
+//               )}
+//             </div>
+//           </div> */}
+//           {/* <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
+//             <div className='text-gray-500 mr-2 font-bold'>Weekly</div>
+//             <div className='text-2xl font-bold text-blue-500'>
+//               {property.rates.weekly ? (
+//                 `ksh${property.rates.weekly.toLocaleString()}`
+//               ) : (
+//                 <FaTimes className='text-red-700' />
+//               )}
+//             </div>
+
+//           </div> */}
+//           <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
+//             <div className='text-gray-500 mr-2 font-bold'>Sale</div>
+//             <div className='text-2xl font-bold' style={{ color: '#800080' }}>
+//               {property.rates.sale ? (
+//                 `ksh${property.rates.sale.toLocaleString()}`
+//               ) : (
+//                 <FaTimes className='text-red-700' />
+//               )}
+//             </div>
+            
+//           </div>
+//           {/* <div className='flex items-center justify-center mb-4 pb-4 md:pb-0'>
+//             <div className='text-gray-500 mr-2 font-bold'>Monthly</div>
+//             <div className='text-2xl font-bold text-blue-500'>
+//               {property.rates.monthly ? (
+//                 `ksh${property.rates.monthly.toLocaleString()}`
+//               ) : (
+//                 <FaTimes className='text-red-700' />
+//               )}
+//             </div>
+//           </div> */}
+         
+//         </div>
+//       </div>
+
+//       <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+//         <h3 className='text-lg font-bold mb-6'>Description & Details</h3>
+//         <div className='flex justify-center gap-4 mb-4 text-xl space-x-9' style={{ color: '#800080' }}>
+//           <p>
+//             <FaBed className='inline-block mr-2' /> {property.beds}{' '}
+//             <span className='hidden sm:inline'>Beds</span>
+//           </p>
+//           <p>
+//             <FaBath className='inline-block mr-2' /> {property.baths}{' '}
+//             <span className='hidden sm:inline'>Baths</span>
+//           </p>
+//           <p>
+//             <i className='fa-solid fa-ruler-combined'></i>
+//             <FaRulerCombined className='inline-block mr-2' />
+//             {property.square_feet}{' '}
+//             <span className='hidden sm:inline'>sqft</span>
+//           </p>
+//         </div>
+//         <p className='text-gray-500 mb-4 text-center'>{property.description}</p>
+//       </div>
+
+//       <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+//         <h3 className='text-lg font-bold mb-6'>Amenities</h3>
+
+//         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2'>
+//           {property.amenities.map((amenity, index) => (
+//             <li key={index}>
+//               <FaCheck className='inline-block text-green-600 mr-2' /> {amenity}
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+//       {/* <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+//         <PropertyMap property={property} />
+//       </div> */}
+//     </main>
+//   );
+// };
+// export default PropertyDetails;
+
+
+import Image from 'next/image';
 import {
   FaBed,
   FaBath,
@@ -6,110 +124,101 @@ import {
   FaCheck,
   FaMapMarker,
 } from 'react-icons/fa';
-//import PropertyMap from '@/components/PropertyMap';
+// import PropertyMap from '@/components/PropertyMap';
 
 const PropertyDetails = ({ property }) => {
   if (!property) return <div>Loading...</div>;
-  
+
   return (
     <main>
-      <div className='bg-white p-6 rounded-lg shadow-md text-center md:text-left'>
-        <div className='text-gray-500 mb-4'>{property.type}</div>
-        <h1 className='text-3xl font-bold mb-4'>{property.name}</h1>
-        <div className='text-gray-500 mb-4 flex align-middle justify-center md:justify-start'>
-          <FaMapMarker className='text-lg text-orange-700 mr-2' />
-          <p className='text-orange-700'>
+      {/* 🖼️ Image Section */}
+      {property.images && property.images.length > 0 && (
+        <div className="mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {property.images.map((img, index) => (
+              <div key={index} className="relative w-full h-64 rounded-lg overflow-hidden">
+                <Image
+                  src={img.url || img}
+                  alt={property.name || 'Property Image'}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={index === 0}
+                  unoptimized // 👈 Add this if Cloudinary URLs cause 400 errors
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+        <div className="text-gray-500 mb-4">{property.type}</div>
+        <h1 className="text-3xl font-bold mb-4">{property.name}</h1>
+
+        <div className="text-gray-500 mb-4 flex items-center justify-center md:justify-start">
+          <FaMapMarker className="text-lg text-orange-700 mr-2" />
+          <p className="text-orange-700">
             {property.location.street}, {property.location.city}{' '}
             {property.location.state}
           </p>
         </div>
 
-        <h3 className='text-lg font-bold my-6 bg-gray-800 text-white p-2'>
+        <h3 className="text-lg font-bold my-6 bg-gray-800 text-white p-2">
           Rates & Options
         </h3>
-        <div className='flex flex-col md:flex-row justify-around'>
-          {/* <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
-            <div className='text-gray-500 mr-2 font-bold'>Daily</div>
-            <div className='text-2xl font-bold text-blue-500'>
-              {property.rates.daily ? (
-                `ksh${property.rates.daily.toLocaleString()}`
-              ) : (
-                <FaTimes className='text-red-700' />
-              )}
-            </div>
-          </div> */}
-          {/* <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
-            <div className='text-gray-500 mr-2 font-bold'>Weekly</div>
-            <div className='text-2xl font-bold text-blue-500'>
-              {property.rates.weekly ? (
-                `ksh${property.rates.weekly.toLocaleString()}`
-              ) : (
-                <FaTimes className='text-red-700' />
-              )}
-            </div>
-
-          </div> */}
-          <div className='flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0'>
-            <div className='text-gray-500 mr-2 font-bold'>Sale</div>
-            <div className='text-2xl font-bold' style={{ color: '#800080' }}>
-              {property.rates.sale ? (
+        <div className="flex flex-col md:flex-row justify-around">
+          <div className="flex items-center justify-center mb-4 border-b border-gray-200 md:border-b-0 pb-4 md:pb-0">
+            <div className="text-gray-500 mr-2 font-bold">Sale</div>
+            <div className="text-2xl font-bold" style={{ color: '#800080' }}>
+              {property.rates?.sale ? (
                 `ksh${property.rates.sale.toLocaleString()}`
               ) : (
-                <FaTimes className='text-red-700' />
+                <FaTimes className="text-red-700" />
               )}
             </div>
-            
           </div>
-          {/* <div className='flex items-center justify-center mb-4 pb-4 md:pb-0'>
-            <div className='text-gray-500 mr-2 font-bold'>Monthly</div>
-            <div className='text-2xl font-bold text-blue-500'>
-              {property.rates.monthly ? (
-                `ksh${property.rates.monthly.toLocaleString()}`
-              ) : (
-                <FaTimes className='text-red-700' />
-              )}
-            </div>
-          </div> */}
-         
         </div>
       </div>
 
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-        <h3 className='text-lg font-bold mb-6'>Description & Details</h3>
-        <div className='flex justify-center gap-4 mb-4 text-xl space-x-9' style={{ color: '#800080' }}>
+      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h3 className="text-lg font-bold mb-6">Description & Details</h3>
+        <div
+          className="flex justify-center gap-4 mb-4 text-xl space-x-9"
+          style={{ color: '#800080' }}
+        >
           <p>
-            <FaBed className='inline-block mr-2' /> {property.beds}{' '}
-            <span className='hidden sm:inline'>Beds</span>
+            <FaBed className="inline-block mr-2" /> {property.beds}{' '}
+            <span className="hidden sm:inline">Beds</span>
           </p>
           <p>
-            <FaBath className='inline-block mr-2' /> {property.baths}{' '}
-            <span className='hidden sm:inline'>Baths</span>
+            <FaBath className="inline-block mr-2" /> {property.baths}{' '}
+            <span className="hidden sm:inline">Baths</span>
           </p>
           <p>
-            <i className='fa-solid fa-ruler-combined'></i>
-            <FaRulerCombined className='inline-block mr-2' />
-            {property.square_feet}{' '}
-            <span className='hidden sm:inline'>sqft</span>
+            <FaRulerCombined className="inline-block mr-2" />
+            {property.square_feet} <span className="hidden sm:inline">sqft</span>
           </p>
         </div>
-        <p className='text-gray-500 mb-4 text-center'>{property.description}</p>
+        <p className="text-gray-500 mb-4 text-center">{property.description}</p>
       </div>
 
-      <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-        <h3 className='text-lg font-bold mb-6'>Amenities</h3>
-
-        <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2'>
+      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h3 className="text-lg font-bold mb-6">Amenities</h3>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-y-2">
           {property.amenities.map((amenity, index) => (
             <li key={index}>
-              <FaCheck className='inline-block text-green-600 mr-2' /> {amenity}
+              <FaCheck className="inline-block text-green-600 mr-2" /> {amenity}
             </li>
           ))}
         </ul>
       </div>
-      {/* <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+
+      {/* <div className="bg-white p-6 rounded-lg shadow-md mt-6">
         <PropertyMap property={property} />
       </div> */}
     </main>
   );
 };
+
 export default PropertyDetails;
