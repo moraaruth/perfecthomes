@@ -54,7 +54,7 @@ const PropertyContactForm = ({ property }) => {
 
       {wasSubmitted ? (
         <p className='text-green-500 mb-4'>
-          Your message has been sent successfully!
+          Thankyou, Your message has been sent successfully!
         </p>
       ) : (
         <form onSubmit={handleSubmit}>
