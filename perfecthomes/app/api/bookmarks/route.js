@@ -1,27 +1,29 @@
 import connectDB from '@/config/database';
 import User from '@/models/User';
 import Property from '@/models/Property';
-import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/bookmarks
-export const GET = async () => {
+// GET /api/bookmarks?userId=...
+export const GET = async (request) => {
   try {
     await connectDB();
 
-    const sessionUser = await getSessionUser();
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
-    if (!sessionUser || !sessionUser.userId) {
-      return new Response('User ID is required', { status: 401 });
+    if (!userId) {
+      return new Response('User ID is required', { status: 400 });
     }
 
-    const { userId } = sessionUser;
-
     // Find user in database
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findById(userId);
 
-    // Get users bookmarks
+    if (!user) {
+      return new Response('User not found', { status: 404 });
+    }
+
+    // Get user's bookmarks
     const bookmarks = await Property.find({ _id: { $in: user.bookmarks } });
 
     return new Response(JSON.stringify(bookmarks), { status: 200 });
@@ -31,35 +33,33 @@ export const GET = async () => {
   }
 };
 
+// POST /api/bookmarks
 export const POST = async (request) => {
   try {
     await connectDB();
 
-    const { propertyId } = await request.json();
+    const { propertyId, userId } = await request.json();
 
-    const sessionUser = await getSessionUser();
-
-    if (!sessionUser || !sessionUser.userId) {
-      return new Response('User ID is required', { status: 401 });
+    if (!userId) {
+      return new Response('User ID is required', { status: 400 });
     }
 
-    const { userId } = sessionUser;
-
     // Find user in database
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return new Response('User not found', { status: 404 });
+    }
 
     // Check if property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyId);
-
     let message;
 
     if (isBookmarked) {
-      // If already bookmarked, remove it
       user.bookmarks.pull(propertyId);
       message = 'Bookmark removed successfully';
       isBookmarked = false;
     } else {
-      // If not bookmarked, add it
       user.bookmarks.push(propertyId);
       message = 'Bookmark added successfully';
       isBookmarked = true;
@@ -67,9 +67,7 @@ export const POST = async (request) => {
 
     await user.save();
 
-    return new Response(JSON.stringify({ message, isBookmarked }), {
-      status: 200,
-    });
+    return new Response(JSON.stringify({ message, isBookmarked }), { status: 200 });
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });
