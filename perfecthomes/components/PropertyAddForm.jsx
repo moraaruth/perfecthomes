@@ -492,7 +492,7 @@ const PropertyAddForm = () => {
             Rates (Leave blank if not applicable)
           </label>
           <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4'>
-            {/* <div className='flex items-center'>
+             <div className='flex items-center'>
               <label htmlFor='weekly_rate' className='mr-2'>
                 Weekly
               </label>
@@ -504,7 +504,7 @@ const PropertyAddForm = () => {
                 value={fields.rates.weekly}
                 onChange={handleChange}
               />
-            </div> */}
+            </div> 
             <div className='flex items-center'>
               <label htmlFor='sale_rate' className='mr-2'>
                 Sale
@@ -518,7 +518,7 @@ const PropertyAddForm = () => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div className='flex items-center'>
+             <div className='flex items-center'>
               <label htmlFor='monthly_rate' className='mr-2'>
                 Monthly
               </label>
@@ -530,8 +530,8 @@ const PropertyAddForm = () => {
                 value={fields.rates.monthly}
                 onChange={handleChange}
               />
-            </div> */}
-            {/* <div className='flex items-center'>
+            </div> 
+            <div className='flex items-center'>
               <label htmlFor='daily_rate' className='mr-2'>
                 Daily
               </label>
@@ -543,7 +543,7 @@ const PropertyAddForm = () => {
                 value={fields.rates.daily}
                 onChange={handleChange}
               />
-            </div> */}
+            </div> 
           </div>
         </div>
 
