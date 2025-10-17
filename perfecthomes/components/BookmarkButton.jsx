@@ -1,22 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { FaBookmark } from 'react-icons/fa';
 
 const BookmarkButton = ({ property }) => {
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
-
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-
     const checkBookmarkStatus = async () => {
       try {
         const res = await fetch('/api/bookmarks/check', {
@@ -41,14 +32,9 @@ const BookmarkButton = ({ property }) => {
     };
 
     checkBookmarkStatus();
-  }, [property._id, userId]);
+  }, [property._id]);
 
   const handleClick = async () => {
-    if (!userId) {
-      toast.error('You need to sign in to bookmark a property');
-      return;
-    }
-
     try {
       const res = await fetch('/api/bookmarks', {
         method: 'POST',
@@ -64,6 +50,8 @@ const BookmarkButton = ({ property }) => {
         const data = await res.json();
         toast.success(data.message);
         setIsBookmarked(data.isBookmarked);
+      } else {
+        toast.error('Something went wrong');
       }
     } catch (error) {
       console.log(error);
@@ -89,4 +77,5 @@ const BookmarkButton = ({ property }) => {
     </button>
   );
 };
+
 export default BookmarkButton;
