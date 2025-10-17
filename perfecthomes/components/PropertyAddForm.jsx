@@ -106,54 +106,73 @@ const PropertyAddForm = () => {
      }));
    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const formData = new FormData();
-      
-      // Add all form fields to FormData
-      formData.append('type', fields.type);
-      formData.append('name', fields.name);
-      formData.append('description', fields.description);
-      formData.append('location.street', fields.location.street);
-      formData.append('location.city', fields.location.city);
-      formData.append('beds', fields.beds);
-      formData.append('baths', fields.baths);
-      formData.append('square_feet', fields.square_feet);
-      formData.append('rates.sale', fields.rates.sale);
-      formData.append('seller_info.name', fields.seller_info.name);
-      formData.append('seller_info.email', fields.seller_info.email);
-      formData.append('seller_info.phone', fields.seller_info.phone);
-      
-      // Add amenities
-      fields.amenities.forEach(amenity => {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const formData = new FormData();
+
+    // ✅ Append form fields
+    formData.append('type', fields.type || '');
+    formData.append('name', fields.name || '');
+    formData.append('description', fields.description || '');
+    formData.append('location.street', fields.location?.street || '');
+    formData.append('location.city', fields.location?.city || '');
+    formData.append('beds', fields.beds || '');
+    formData.append('baths', fields.baths || '');
+    formData.append('square_feet', fields.square_feet || '');
+    formData.append('rates.sale', fields.rates?.sale || '');
+    formData.append('seller_info.name', fields.seller_info?.name || '');
+    formData.append('seller_info.email', fields.seller_info?.email || '');
+    formData.append('seller_info.phone', fields.seller_info?.phone || '');
+
+    // ✅ Append amenities
+    if (Array.isArray(fields.amenities)) {
+      fields.amenities.forEach((amenity) => {
         formData.append('amenities', amenity);
       });
-      
-      // Add images
-      // fields.images.forEach(image => {
-      //   formData.append('images', image);
-      // });
-      
-      const response = await fetch('/api/properties', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
-        router.push(result.redirectUrl || '/properties');
-      } else {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        console.error('Failed to add property:', response.status, errorData);
-        alert(`Failed to add property: ${errorData.message || errorData.error}`);
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Error submitting form. Please try again.');
     }
-  };
+
+    // ✅ Append images (uncomment if you’re handling Cloudinary uploads directly here)
+    /*
+    if (fields.images && fields.images.length > 0) {
+      fields.images.forEach((image) => {
+        formData.append('images', image);
+      });
+    }
+    */
+
+    // ✅ Send request
+    const response = await fetch('/api/properties', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // ✅ Handle response safely
+    const contentType = response.headers.get('content-type');
+    let data;
+
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      data = { message: text };
+    }
+
+    if (response.ok) {
+      console.log('✅ Property added successfully:', data);
+      alert('Property added successfully!');
+      router.push(data.redirectUrl || '/properties');
+    } else {
+      console.error('❌ Failed to add property:', response.status, data);
+      alert(`Failed to add property: ${data.error || data.message || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('💥 Error submitting form:', error);
+    alert('Error submitting form. Please try again.');
+  }
+};
+
 
 
 
