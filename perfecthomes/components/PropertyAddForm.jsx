@@ -565,7 +565,7 @@ const PropertyAddForm = () => {
           />
         </div>
         <div className='mb-4'>
-          <label
+           <label 
             htmlFor='seller_email'
             className='block text-gray-700 font-bold mb-2'
           >
@@ -587,7 +587,7 @@ const PropertyAddForm = () => {
             htmlFor='seller_phone'
             className='block text-gray-700 font-bold mb-2'
           >
-            Seller Phone
+            Seller Phone Number
           </label>
           <input
             type='tel'
