@@ -88,23 +88,47 @@ const PropertyAddForm = () => {
     }));
   };
 
-   const handleImageChange = (e) => {
-    const { files } = e.target;
+  //  const handleImageChange = (e) => {
+  //   const { files } = e.target;
 
-  //   // Clone images array
-    const updatedImages = [...fields.images];
+  // //   // Clone images array
+  //   const updatedImages = [...fields.images];
 
-  //   // Add new files to the array
-    for (const file of files) {
-      updatedImages.push(file);
-     }
+  // //   // Add new files to the array
+  //   for (const file of files) {
+  //     updatedImages.push(file);
+  //    }
 
-  //   // Update state with array of images
-     setFields((prevFields) => ({
-       ...prevFields,
-       images: updatedImages,
-     }));
-   };
+  // //   // Update state with array of images
+  //    setFields((prevFields) => ({
+  //      ...prevFields,
+  //      images: updatedImages,
+  //    }));
+  //  };
+const handleImageChange = async (e) => {
+  const files = Array.from(e.target.files);
+  const uploadedImages = [];
+
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'ram21zim'); // from Cloudinary settings
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    uploadedImages.push(data.secure_url); // store only image URL
+  }
+
+  // Update state with Cloudinary URLs
+  setFields((prevFields) => ({
+    ...prevFields,
+    images: uploadedImages,
+  }));
+};
 
 const handleSubmit = async (e) => {
   e.preventDefault();
