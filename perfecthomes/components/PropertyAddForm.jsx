@@ -130,58 +130,107 @@ const handleImageChange = async (e) => {
   }));
 };
 
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const formData = new FormData();
+
+//     // ✅ Append form fields
+//     formData.append('type', fields.type || '');
+//     formData.append('name', fields.name || '');
+//     formData.append('description', fields.description || '');
+//     formData.append('location.street', fields.location?.street || '');
+//     formData.append('location.city', fields.location?.city || '');
+//     formData.append('beds', fields.beds || '');
+//     formData.append('baths', fields.baths || '');
+//     formData.append('square_feet', fields.square_feet || '');
+//     formData.append('rates.sale', fields.rates?.sale || '');
+//     formData.append('seller_info.name', fields.seller_info?.name || '');
+//     formData.append('seller_info.email', fields.seller_info?.email || '');
+//     formData.append('seller_info.phone', fields.seller_info?.phone || '');
+
+//     // ✅ Append amenities
+//     if (Array.isArray(fields.amenities)) {
+//       fields.amenities.forEach((amenity) => {
+//         formData.append('amenities', amenity);
+//       });
+//     }
+
+//     // ✅ Append images (uncomment if you’re handling Cloudinary uploads directly here)
+    
+//     if (fields.images && fields.images.length > 0) {
+//       fields.images.forEach((image) => {
+//         formData.append('images', image);
+//       });
+//     }
+    
+
+//     // ✅ Send request
+//     const response = await fetch('/api/properties', {
+//       method: 'POST',
+//       body: formData,
+//     });
+
+//     // ✅ Handle response safely
+//     const contentType = response.headers.get('content-type');
+//     let data;
+
+//     if (contentType && contentType.includes('application/json')) {
+//       data = await response.json();
+//     } else {
+//       const text = await response.text();
+//       data = { message: text };
+//     }
+
+//     if (response.ok) {
+//       console.log('✅ Property added successfully:', data);
+//       alert('Property added successfully!');
+//       router.push(data.redirectUrl || '/properties');
+//     } else {
+//       console.error('❌ Failed to add property:', response.status, data);
+//       alert(`Failed to add property: ${data.error || data.message || 'Unknown error'}`);
+//     }
+//   } catch (error) {
+//     console.error('💥 Error submitting form:', error);
+//     alert('Error submitting form. Please try again.');
+//   }
+// };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const formData = new FormData();
+    const propertyData = {
+      type: fields.type || '',
+      name: fields.name || '',
+      description: fields.description || '',
+      location: {
+        street: fields.location?.street || '',
+        city: fields.location?.city || '',
+      },
+      beds: fields.beds || '',
+      baths: fields.baths || '',
+      square_feet: fields.square_feet || '',
+      rates: {
+        sale: fields.rates?.sale || '',
+      },
+      seller_info: {
+        name: fields.seller_info?.name || '',
+        email: fields.seller_info?.email || '',
+        phone: fields.seller_info?.phone || '',
+      },
+      amenities: fields.amenities || [],
+      images: fields.images || [], // ✅ Cloudinary URLs are already here
+    };
 
-    // ✅ Append form fields
-    formData.append('type', fields.type || '');
-    formData.append('name', fields.name || '');
-    formData.append('description', fields.description || '');
-    formData.append('location.street', fields.location?.street || '');
-    formData.append('location.city', fields.location?.city || '');
-    formData.append('beds', fields.beds || '');
-    formData.append('baths', fields.baths || '');
-    formData.append('square_feet', fields.square_feet || '');
-    formData.append('rates.sale', fields.rates?.sale || '');
-    formData.append('seller_info.name', fields.seller_info?.name || '');
-    formData.append('seller_info.email', fields.seller_info?.email || '');
-    formData.append('seller_info.phone', fields.seller_info?.phone || '');
-
-    // ✅ Append amenities
-    if (Array.isArray(fields.amenities)) {
-      fields.amenities.forEach((amenity) => {
-        formData.append('amenities', amenity);
-      });
-    }
-
-    // ✅ Append images (uncomment if you’re handling Cloudinary uploads directly here)
-    
-    if (fields.images && fields.images.length > 0) {
-      fields.images.forEach((image) => {
-        formData.append('images', image);
-      });
-    }
-    
-
-    // ✅ Send request
     const response = await fetch('/api/properties', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(propertyData),
     });
 
-    // ✅ Handle response safely
-    const contentType = response.headers.get('content-type');
-    let data;
-
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      const text = await response.text();
-      data = { message: text };
-    }
+    const data = await response.json();
 
     if (response.ok) {
       console.log('✅ Property added successfully:', data);
@@ -196,7 +245,6 @@ const handleSubmit = async (e) => {
     alert('Error submitting form. Please try again.');
   }
 };
-
 
 
 
