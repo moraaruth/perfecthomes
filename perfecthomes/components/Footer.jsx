@@ -23,7 +23,7 @@ const Footer = () => {
               with their dream homes across Kenya with professional service and expertise.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-purple-200 hover:text-white transition-colors">
+              {/* <a href="#" className="text-purple-200 hover:text-white transition-colors">
                 <FaFacebook size={24} />
               </a>
               <a href="#" className="text-purple-200 hover:text-white transition-colors">
@@ -34,7 +34,42 @@ const Footer = () => {
               </a>
               <a href="#" className="text-purple-200 hover:text-white transition-colors">
                 <FaLinkedin size={24} />
-              </a>
+              </a> */}
+               <a
+                            href="https://www.facebook.com/share/14NMtbUgq4a/?mibextid=wwXIfr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FaFacebook className="text-white hover:text-blue-500 cursor-pointer" size={24} />
+                          </a>
+              
+                          <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" size={24} />
+                          {/* <FaTwitter className="text-white hover:text-blue-400 cursor-pointer" />
+                          <FaLinkedin className="text-white hover:text-blue-600 cursor-pointer" /> */}
+                          <FaYoutube className="text-white hover:text-red-500 cursor-pointer" size={24} />
+                          <a
+                            href="https://wa.me/message/3PCINZDAGWVIH1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FaWhatsapp className="text-green-500 hover:text-green-700 cursor-pointer" size={24}/>
+                          </a>
+              
+                          {/* <FaInstagram className="text-white hover:text-pink-400 cursor-pointer" /> */}
+                          <a
+                            href="https://www.instagram.com/kenya_perfect_homes?igsh=dG9wZWF3NnF1ajZj&utm_source=qr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FaInstagram className="text-white hover:text-pink-400 cursor-pointer" size={24} />
+                          </a>
+                          <a
+                            href="https://www.tiktok.com/@perfecthomes_1?_t=ZM-90dzr7MlxZA&_r=1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FaTiktok className="text-black hover:text-gray-700 cursor-pointer" size={24} />
+                          </a>
             </div>
           </div>
 
