@@ -240,6 +240,7 @@ const handleSubmit = async (e) => {
       console.error('❌ Failed to add property:', response.status, data);
       alert(`Failed to add property: ${data.error || data.message || 'Unknown error'}`);
     }
+
   } catch (error) {
     console.error('💥 Error submitting form:', error);
     alert('Error submitting form. Please try again.');
@@ -718,7 +719,7 @@ const handleSubmit = async (e) => {
             onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
             type='submit'
           >
-            Add Propertys
+            Add Property
           </button>
         </div>
       </form>
