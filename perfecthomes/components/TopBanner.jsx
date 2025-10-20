@@ -19,7 +19,7 @@ const TopBanner = () => {
 
         {/* Right side - Social media */}
         <div className="flex items-center space-x-4">
-          <span>Follow us on:</span>
+          <span>Follow us:</span>
           <div className="flex items-center space-x-3">
             <a
               href="https://www.facebook.com/share/14NMtbUgq4a/?mibextid=wwXIfr"
