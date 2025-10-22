@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 const PropertyAddForm = () => {
   const router = useRouter();
+  const [propertyImages, setPropertyImages] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState({
     type: '',
@@ -105,14 +106,15 @@ const PropertyAddForm = () => {
   //      images: updatedImages,
   //    }));
   //  };
-const handleImageChange = async (e) => {
+
+  const handleImageChange = async (e) => {
   const files = Array.from(e.target.files);
   const uploadedImages = [];
 
   for (const file of files) {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'ram21zim'); // from Cloudinary settings
+    formData.append('upload_preset', 'ram21zim');
 
     const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
       method: 'POST',
@@ -120,15 +122,36 @@ const handleImageChange = async (e) => {
     });
 
     const data = await res.json();
-    uploadedImages.push(data.secure_url); // store only image URL
+    uploadedImages.push(data.secure_url);
   }
 
-  // Update state with Cloudinary URLs
-  setFields((prevFields) => ({
-    ...prevFields,
-    images: uploadedImages,
-  }));
+  // Save the uploaded image URLs to state
+  setPropertyImages(uploadedImages);
 };
+// const handleImageChange = async (e) => {
+//   const files = Array.from(e.target.files);
+//   const uploadedImages = [];
+
+//   for (const file of files) {
+//     const formData = new FormData();
+//     formData.append('file', file);
+//     formData.append('upload_preset', 'ram21zim'); // from Cloudinary settings
+
+//     const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+//       method: 'POST',
+//       body: formData,
+//     });
+
+//     const data = await res.json();
+//     uploadedImages.push(data.secure_url); // store only image URL
+//   }
+
+//   // Update state with Cloudinary URLs
+//   setFields((prevFields) => ({
+//     ...prevFields,
+//     images: uploadedImages,
+//   }));
+// };
 
 // const handleSubmit = async (e) => {
 //   e.preventDefault();
@@ -197,10 +220,61 @@ const handleImageChange = async (e) => {
 //   }
 // };
 
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const propertyData = {
+//       type: fields.type || '',
+//       name: fields.name || '',
+//       description: fields.description || '',
+//       location: {
+//         street: fields.location?.street || '',
+//         city: fields.location?.city || '',
+//       },
+//       beds: fields.beds || '',
+//       baths: fields.baths || '',
+//       square_feet: fields.square_feet || '',
+//       rates: {
+//         sale: fields.rates?.sale || '',
+//       },
+//       seller_info: {
+//         name: fields.seller_info?.name || '',
+//         email: fields.seller_info?.email || '',
+//         phone: fields.seller_info?.phone || '',
+//       },
+//       amenities: fields.amenities || [],
+//       images: fields.images || [], // ✅ Cloudinary URLs are already here
+//     };
+
+//     const response = await fetch('/api/properties', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(propertyData),
+//     });
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       console.log('✅ Property added successfully:', data);
+//       alert('Property added successfully!');
+//       router.push(data.redirectUrl || '/properties');
+//     } else {
+//       console.error('❌ Failed to add property:', response.status, data);
+//       alert(`Failed to add property: ${data.error || data.message || 'Unknown error'}`);
+//     }
+
+//   } catch (error) {
+//     console.error('💥 Error submitting form:', error);
+//     alert('Error submitting form. Please try again.');
+//   }
+// };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
+    // Build the property data object
     const propertyData = {
       type: fields.type || '',
       name: fields.name || '',
@@ -208,12 +282,17 @@ const handleSubmit = async (e) => {
       location: {
         street: fields.location?.street || '',
         city: fields.location?.city || '',
+        state: fields.location?.state || '',
+        zipcode: fields.location?.zipcode || '',
       },
-      beds: fields.beds || '',
-      baths: fields.baths || '',
-      square_feet: fields.square_feet || '',
+      beds: fields.beds || 0,
+      baths: fields.baths || 0,
+      square_feet: fields.square_feet || 0,
       rates: {
-        sale: fields.rates?.sale || '',
+        sale: fields.rates?.sale || 0,
+        weekly: fields.rates?.weekly || 0,
+        monthly: fields.rates?.monthly || 0,
+        nightly: fields.rates?.nightly || 0,
       },
       seller_info: {
         name: fields.seller_info?.name || '',
@@ -221,9 +300,11 @@ const handleSubmit = async (e) => {
         phone: fields.seller_info?.phone || '',
       },
       amenities: fields.amenities || [],
-      images: fields.images || [], // ✅ Cloudinary URLs are already here
+      images: fields.images || [], // ✅ Cloudinary URLs
+      is_featured: fields.is_featured || false,
     };
 
+    // Send to backend
     const response = await fetch('/api/properties', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -246,7 +327,6 @@ const handleSubmit = async (e) => {
     alert('Error submitting form. Please try again.');
   }
 };
-
 
 
   return (
