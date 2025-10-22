@@ -29,7 +29,7 @@ const TopBanner = () => {
               <FaFacebook className="text-white hover:text-blue-500 cursor-pointer" />
             </a>
 
-            <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" />
+            {/* <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" /> */}
             {/* <FaTwitter className="text-white hover:text-blue-400 cursor-pointer" />
             <FaLinkedin className="text-white hover:text-blue-600 cursor-pointer" /> */}
             <FaYoutube className="text-white hover:text-red-500 cursor-pointer" />
@@ -38,7 +38,7 @@ const TopBanner = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaWhatsapp className="text-green-500 hover:text-green-700 cursor-pointer" />
+              <FaWhatsapp className="text-white hover:text-green-700 cursor-pointer" />
             </a>
 
             {/* <FaInstagram className="text-white hover:text-pink-400 cursor-pointer" /> */}
@@ -54,7 +54,7 @@ const TopBanner = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaTiktok className="text-black hover:text-gray-700 cursor-pointer" />
+              <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" />
             </a>
           </div>
         </div>
