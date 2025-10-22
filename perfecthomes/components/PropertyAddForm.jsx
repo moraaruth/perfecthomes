@@ -107,43 +107,19 @@ const PropertyAddForm = () => {
   //    }));
   //  };
 
-  const handleImageChange = async (e) => {
-  const files = Array.from(e.target.files);
-  if (files.length === 0) return;
-  
-  console.log(`Uploading ${files.length} images...`);
-  const uploadedImages = [];
+  const handleImageChange = (e) => {
+    const { files } = e.target;
+    const updatedImages = [...fields.images];
 
-  for (const file of files) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'unsigned_preset');
-
-    try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await res.json();
-      console.log('Cloudinary response:', data);
-      if (data.secure_url) {
-        uploadedImages.push(data.secure_url);
-      } else {
-        console.error('No secure_url in response:', data);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
+    for (const file of files) {
+      updatedImages.push(file);
     }
-  }
 
-  console.log(`Successfully uploaded ${uploadedImages.length} images`);
-  setPropertyImages(uploadedImages);
-  setFields((prevFields) => ({
-    ...prevFields,
-    images: uploadedImages,
-  }));
-};
+    setFields((prevFields) => ({
+      ...prevFields,
+      images: updatedImages,
+    }));
+  };
 // const handleImageChange = async (e) => {
 //   const files = Array.from(e.target.files);
 //   const uploadedImages = [];
@@ -288,58 +264,47 @@ const PropertyAddForm = () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-
+  
   try {
-    // Build the property data object
-    const propertyData = {
-      type: fields.type || '',
-      name: fields.name || '',
-      description: fields.description || '',
-      location: {
-        street: fields.location?.street || '',
-        city: fields.location?.city || '',
-        state: fields.location?.state || '',
-        zipcode: fields.location?.zipcode || '',
-      },
-      beds: fields.beds || 0,
-      baths: fields.baths || 0,
-      square_feet: fields.square_feet || 0,
-      rates: {
-        sale: fields.rates?.sale || 0,
-        weekly: fields.rates?.weekly || 0,
-        monthly: fields.rates?.monthly || 0,
-        nightly: fields.rates?.nightly || 0,
-      },
-      seller_info: {
-        name: fields.seller_info?.name || '',
-        email: fields.seller_info?.email || '',
-        phone: fields.seller_info?.phone || '',
-      },
-      amenities: fields.amenities || [],
-      images: propertyImages.length > 0 ? propertyImages : fields.images || [],
-      is_featured: fields.is_featured || false,
-    };
-
-    // Send to backend
+    const formData = new FormData();
+    
+    formData.append('type', fields.type);
+    formData.append('name', fields.name);
+    formData.append('description', fields.description);
+    formData.append('location.street', fields.location.street);
+    formData.append('location.city', fields.location.city);
+    formData.append('beds', fields.beds);
+    formData.append('baths', fields.baths);
+    formData.append('square_feet', fields.square_feet);
+    formData.append('rates.weekly', fields.rates.weekly);
+    formData.append('rates.sale', fields.rates.sale);
+    formData.append('rates.monthly', fields.rates.monthly);
+    formData.append('rates.nightly', fields.rates.daily);
+    formData.append('seller_info.name', fields.seller_info.name);
+    formData.append('seller_info.email', fields.seller_info.email);
+    formData.append('seller_info.phone', fields.seller_info.phone);
+    
+    fields.amenities.forEach(amenity => {
+      formData.append('amenities', amenity);
+    });
+    
+    fields.images.forEach(image => {
+      formData.append('images', image);
+    });
+    
     const response = await fetch('/api/properties', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(propertyData),
+      body: formData,
     });
-
-    const data = await response.json();
-
+    
     if (response.ok) {
-      console.log('✅ Property added successfully:', data);
-      alert('Property added successfully!');
-      router.push(data.redirectUrl || '/properties');
+      const result = await response.json();
+      router.push(result.redirectUrl || '/properties');
     } else {
-      console.error('❌ Failed to add property:', response.status, data);
-      alert(`Failed to add property: ${data.error || data.message || 'Unknown error'}`);
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      alert(`Failed to add property: ${errorData.message || errorData.error}`);
     }
-
   } catch (error) {
-    console.error('💥 Error submitting form:', error);
     alert('Error submitting form. Please try again.');
   }
 };
@@ -805,9 +770,9 @@ const handleSubmit = async (e) => {
             onChange={handleImageChange}
             required
           />
-          {propertyImages.length > 0 && (
+          {fields.images.length > 0 && (
             <div className='mt-2'>
-              <p className='text-sm text-gray-600'>{propertyImages.length} image(s) uploaded</p>
+              <p className='text-sm text-gray-600'>{fields.images.length} image(s) selected</p>
             </div>
           )}
         </div> 
