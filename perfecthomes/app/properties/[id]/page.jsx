@@ -17,24 +17,41 @@ const PropertyPage = () => {
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPropertyData = async () => {
-      if (!id) return;
-      try {
-        const property = await fetchProperty(id);
-        setProperty(property);
-      } catch (error) {
-        console.error('Error fetching property:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (property === null) {
-      fetchPropertyData();
+useEffect(() => {
+  const fetchPropertyData = async () => {
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/properties/${id}`, { cache: 'no-store' }); // <-- add this
+      if (!res.ok) throw new Error('Property not found');
+      const data = await res.json();
+      setProperty(data);
+    } catch (error) {
+      console.error('Error fetching property:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [id, property]);
+  };
+
+  fetchPropertyData();
+}, [id]);
+
+  // useEffect(() => {
+  //   const fetchPropertyData = async () => {
+  //     if (!id) return;
+  //     try {
+  //       const property = await fetchProperty(id);
+  //       setProperty(property);
+  //     } catch (error) {
+  //       console.error('Error fetching property:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (property === null) {
+  //     fetchPropertyData();
+  //   }
+  // }, [id, property]);
 
   if (!property && !loading) {
     return (
