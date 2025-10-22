@@ -29,7 +29,7 @@ const PropertyAddForm = () => {
       email: '',
       phone: '',
     },
-    // images: [],
+    images: [],
   });
 
   useEffect(() => {
@@ -109,6 +109,9 @@ const PropertyAddForm = () => {
 
   const handleImageChange = async (e) => {
   const files = Array.from(e.target.files);
+  if (files.length === 0) return;
+  
+  console.log(`Uploading ${files.length} images...`);
   const uploadedImages = [];
 
   for (const file of files) {
@@ -116,17 +119,27 @@ const PropertyAddForm = () => {
     formData.append('file', file);
     formData.append('upload_preset', 'ram21zim');
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
-    const data = await res.json();
-    uploadedImages.push(data.secure_url);
+      const data = await res.json();
+      if (data.secure_url) {
+        uploadedImages.push(data.secure_url);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   }
 
-  // Save the uploaded image URLs to state
+  console.log(`Successfully uploaded ${uploadedImages.length} images`);
   setPropertyImages(uploadedImages);
+  setFields((prevFields) => ({
+    ...prevFields,
+    images: uploadedImages,
+  }));
 };
 // const handleImageChange = async (e) => {
 //   const files = Array.from(e.target.files);
@@ -777,7 +790,7 @@ const handleSubmit = async (e) => {
             htmlFor='images'
             className='block text-gray-700 font-bold mb-2'
           >
-            Images (Select images)
+            Images (Select multiple images)
           </label>
           <input
             type='file'
@@ -789,6 +802,11 @@ const handleSubmit = async (e) => {
             onChange={handleImageChange}
             required
           />
+          {propertyImages.length > 0 && (
+            <div className='mt-2'>
+              <p className='text-sm text-gray-600'>{propertyImages.length} image(s) uploaded</p>
+            </div>
+          )}
         </div> 
 
         <div>
