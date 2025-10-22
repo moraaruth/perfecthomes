@@ -1,4 +1,4 @@
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 
 const PropertyImages = ({ images }) => {
@@ -14,15 +14,14 @@ const PropertyImages = ({ images }) => {
               height='600'
             >
               {({ ref, open }) => (
-                <Image
+                <img
                   ref={ref}
                   onClick={open}
                   src={images[0]}
                   alt='Property Image'
                   className='object-cover h-[400px] mx-auto rounded-xl'
-                  width={1000} // Set width
-                  height={600} // Set height
-                  priority={true}
+                  width={1000}
+                  height={600}
                 />
               )}
             </Item>
@@ -46,16 +45,14 @@ const PropertyImages = ({ images }) => {
                     height='600'
                   >
                     {({ ref, open }) => (
-                      <Image
+                      <img
                         ref={ref}
                         onClick={open}
                         src={image}
                         alt={`Property Image ${index + 1}`}
                         className='object-cover h-[400px] w-full rounded-xl'
-                        width={1000} // Set width
-                        height={600} // Set height
-                        priority={true}
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' // Example sizes for responsive images
+                        width={1000}
+                        height={600}
                       />
                     )}
                   </Item>
