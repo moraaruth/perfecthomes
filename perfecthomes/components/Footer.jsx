@@ -43,7 +43,7 @@ const Footer = () => {
                             <FaFacebook className="text-white hover:text-blue-500 cursor-pointer" size={24} />
                           </a>
               
-                          <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" size={24} />
+                          {/* <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" size={24} /> */}
                           {/* <FaTwitter className="text-white hover:text-blue-400 cursor-pointer" />
                           <FaLinkedin className="text-white hover:text-blue-600 cursor-pointer" /> */}
                           <FaYoutube className="text-white hover:text-red-500 cursor-pointer" size={24} />
@@ -68,7 +68,7 @@ const Footer = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <FaTiktok className="text-black hover:text-gray-700 cursor-pointer" size={24} />
+                            <FaTiktok className="text-white hover:text-pink-500 cursor-pointer" size={24} />
                           </a>
             </div>
           </div>
