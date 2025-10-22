@@ -117,7 +117,7 @@ const PropertyAddForm = () => {
   for (const file of files) {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'ram21zim');
+    formData.append('upload_preset', 'unsigned_preset');
 
     try {
       const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
@@ -126,8 +126,11 @@ const PropertyAddForm = () => {
       });
 
       const data = await res.json();
+      console.log('Cloudinary response:', data);
       if (data.secure_url) {
         uploadedImages.push(data.secure_url);
+      } else {
+        console.error('No secure_url in response:', data);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
