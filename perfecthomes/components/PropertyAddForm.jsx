@@ -299,10 +299,12 @@ const handleSubmit = async (e) => {
     
     if (response.ok) {
       const result = await response.json();
+      alert('Property added successfully!');
       router.push(result.redirectUrl || '/properties');
     } else {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-      alert(`Failed to add property: ${errorData.message || errorData.error}`);
+      const errorText = await response.text();
+      console.error('API Error:', errorText);
+      alert(`Failed to add property: ${errorText}`);
     }
   } catch (error) {
     alert('Error submitting form. Please try again.');
