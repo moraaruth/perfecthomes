@@ -1,6 +1,6 @@
 import logo from '@/assets/images/logo.jpg';
 import Image from 'next/image';
-import { FaPhone, FaMapMarkerAlt, FaFacebook, FaTiktok, FaTwitter, FaLinkedin, FaYoutube, FaInstagram } from 'react-icons/fa'
+import { FaPhone, FaMapMarkerAlt, FaFacebook, FaTiktok, FaTwitter, FaLinkedin, FaYoutube, FaInstagram, FaWhatsapp } from 'react-icons/fa'
 
 const Footer = () => {
   return (
