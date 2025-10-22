@@ -3,7 +3,9 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['mongoose'],
   },
-  // Fix streaming issues
+  images: {
+    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com'],
+  },
   async headers() {
     return [
       {
