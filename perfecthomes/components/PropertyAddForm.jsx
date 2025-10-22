@@ -313,7 +313,7 @@ const handleSubmit = async (e) => {
         phone: fields.seller_info?.phone || '',
       },
       amenities: fields.amenities || [],
-      images: fields.images || [], // ✅ Cloudinary URLs
+      images: propertyImages.length > 0 ? propertyImages : fields.images || [],
       is_featured: fields.is_featured || false,
     };
 
