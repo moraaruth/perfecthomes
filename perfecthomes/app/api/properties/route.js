@@ -64,36 +64,52 @@ export const POST = async (request) => {
 
     const { userId } = sessionUser;
 
-    // ✅ Parse JSON body (not formData)
-    const body = await request.json();
+    const formData = await request.formData();
+    const amenities = formData.getAll('amenities');
+    const images = formData.getAll('images').filter((image) => image.name !== '');
 
-    // ✅ Construct property object
     const propertyData = {
-      type: body.type || '',
-      name: body.name || '',
-      description: body.description || '',
+      type: formData.get('type'),
+      name: formData.get('name'),
+      description: formData.get('description'),
       location: {
-        street: body.location?.street || '',
-        city: body.location?.city || '',
+        street: formData.get('location.street'),
+        city: formData.get('location.city'),
       },
-      beds: body.beds || '',
-      baths: body.baths || '',
-      square_feet: body.square_feet || '',
-      amenities: body.amenities || [],
+      beds: formData.get('beds'),
+      baths: formData.get('baths'),
+      square_feet: formData.get('square_feet'),
+      amenities,
       rates: {
-        weekly: body.rates?.weekly || '',
-        sale: body.rates?.sale || '',
-        monthly: body.rates?.monthly || '',
-        nightly: body.rates?.nightly || '',
+        weekly: formData.get('rates.weekly'),
+        sale: formData.get('rates.sale'),
+        monthly: formData.get('rates.monthly'),
+        nightly: formData.get('rates.nightly'),
       },
       seller_info: {
-        name: body.seller_info?.name || '',
-        email: body.seller_info?.email || '',
-        phone: body.seller_info?.phone || '',
+        name: formData.get('seller_info.name'),
+        email: formData.get('seller_info.email'),
+        phone: formData.get('seller_info.phone'),
       },
-      images: body.images || [], // ✅ directly store Cloudinary URLs
       owner: userId,
     };
+
+    const uploadedImages = [];
+    for (const image of images) {
+      const imageBuffer = await image.arrayBuffer();
+      const imageArray = Array.from(new Uint8Array(imageBuffer));
+      const imageData = Buffer.from(imageArray);
+      const imageType = image.type.split('/')[1];
+      const imageBase64 = imageData.toString('base64');
+
+      const result = await cloudinary.uploader.upload(
+        `data:image/${imageType};base64,${imageBase64}`,
+        { folder: 'propertypulse' }
+      );
+      uploadedImages.push(result.secure_url);
+    }
+
+    propertyData.images = uploadedImages;
 
     // ✅ Save to MongoDB
     const newProperty = new Property(propertyData);
