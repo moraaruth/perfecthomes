@@ -1,5 +1,5 @@
 'use client'
-import { FaPhone, FaMapMarkerAlt, FaFacebook, FaTiktok, FaTwitter, FaLinkedin, FaYoutube, FaInstagram } from 'react-icons/fa'
+import { FaPhone, FaMapMarkerAlt, FaFacebook, FaTiktok, FaTwitter, FaLinkedin, FaYoutube, FaInstagram, FaWhatsapp } from 'react-icons/fa'
 
 const TopBanner = () => {
   return (
