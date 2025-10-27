@@ -17,7 +17,7 @@ const PropertyImages = ({ images }) => {
                 <img
                   ref={ref}
                   onClick={open}
-                  src={images[0]}
+                  src={images[0].url || images[0]}
                   alt='Property Image'
                   className='object-cover h-[400px] mx-auto rounded-xl'
                   width={1000}
@@ -48,7 +48,7 @@ const PropertyImages = ({ images }) => {
                       <img
                         ref={ref}
                         onClick={open}
-                        src={image}
+                        src={image.url || image}
                         alt={`Property Image ${index + 1}`}
                         className='object-cover h-[400px] w-full rounded-xl'
                         width={1000}
