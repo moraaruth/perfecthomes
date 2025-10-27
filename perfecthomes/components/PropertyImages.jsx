@@ -1,9 +1,13 @@
 'use client';
+import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 import { useState } from 'react';
 
 const PropertyImages = ({ images }) => {
-  const [galleryError, setGalleryError] = useState(false);
+  console.log('PropertyImages - First image (header uses):', images[0]);
+  console.log('PropertyImages - All images:', images);
+  const [galleryError, setGalleryError] = useState(true); // Force regular images for testing
+  const [failedImages, setFailedImages] = useState(new Set());
 
   if (!images || images.length === 0) {
     return (
@@ -15,6 +19,11 @@ const PropertyImages = ({ images }) => {
     );
   }
 
+  const handleImageError = (imageUrl, index) => {
+    console.error('Image failed to load:', imageUrl);
+    setFailedImages(prev => new Set([...prev, index]));
+  };
+
   if (galleryError) {
     return (
       <section className='bg-blue-50 p-4'>
@@ -22,12 +31,22 @@ const PropertyImages = ({ images }) => {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {images.map((image, index) => {
               const imageUrl = image.url || image;
+              if (failedImages.has(index)) {
+                return (
+                  <div key={index} className='bg-gray-200 h-[400px] w-full rounded-xl flex items-center justify-center'>
+                    <p className='text-gray-500'>Image unavailable</p>
+                  </div>
+                );
+              }
               return (
-                <div key={index}>
-                  <img
+                <div key={index} className='relative w-full h-[400px] rounded-xl overflow-hidden'>
+                  <Image
                     src={imageUrl}
                     alt={`Property Image ${index + 1}`}
-                    className='object-cover h-[400px] w-full rounded-xl'
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 768px) 100vw, 50vw'
+                    onError={() => handleImageError(imageUrl, index)}
                   />
                 </div>
               );
@@ -55,14 +74,16 @@ const PropertyImages = ({ images }) => {
                     height='800'
                   >
                     {({ ref, open }) => (
-                      <img
-                        ref={ref}
-                        onClick={open}
-                        src={imageUrl}
-                        alt={`Property Image ${index + 1}`}
-                        className='object-cover h-[400px] w-full rounded-xl cursor-pointer hover:opacity-90'
-                        onError={() => console.error('Image failed to load:', imageUrl)}
-                      />
+                      <div className='relative w-full h-[400px] rounded-xl overflow-hidden cursor-pointer hover:opacity-90' ref={ref} onClick={open}>
+                        <Image
+                          src={imageUrl}
+                          alt={`Property Image ${index + 1}`}
+                          fill
+                          className='object-cover'
+                          sizes='(max-width: 768px) 100vw, 50vw'
+                          onError={() => handleImageError(imageUrl, index)}
+                        />
+                      </div>
                     )}
                   </Item>
                 );
