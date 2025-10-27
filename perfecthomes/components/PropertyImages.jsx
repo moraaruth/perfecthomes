@@ -1,9 +1,6 @@
-// import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 
 const PropertyImages = ({ images }) => {
-  console.log('PropertyImages received:', images);
-  
   if (!images || images.length === 0) {
     return (
       <section className='bg-blue-50 p-4'>
@@ -18,60 +15,30 @@ const PropertyImages = ({ images }) => {
     <Gallery>
       <section className='bg-blue-50 p-4'>
         <div className='container mx-auto'>
-          {images.length === 1 ? (
-            <Item
-              original={images[0]}
-              thumbnail={images[0]}
-              width='1000'
-              height='600'
-            >
-              {({ ref, open }) => (
-                <img
-                  ref={ref}
-                  onClick={open}
-                  src={images[0].url || images[0]}
-                  alt='Property Image'
-                  className='object-cover h-[400px] mx-auto rounded-xl'
-                  width={1000}
-                  height={600}
-                />
-              )}
-            </Item>
-          ) : (
-            <div className='grid grid-cols-2 gap-4'>
-              {images.map((image, index) => (
-                <div
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {images.map((image, index) => {
+              const imageUrl = image.url || image;
+              return (
+                <Item
                   key={index}
-                  className={`
-                  ${
-                    images.length === 3 && index === 2
-                      ? 'col-span-2'
-                      : 'col-span-1'
-                  }
-                `}
+                  original={imageUrl}
+                  thumbnail={imageUrl}
+                  width='1200'
+                  height='800'
                 >
-                  <Item
-                    original={image}
-                    thumbnail={image}
-                    width='1000'
-                    height='600'
-                  >
-                    {({ ref, open }) => (
-                      <img
-                        ref={ref}
-                        onClick={open}
-                        src={image.url || image}
-                        alt={`Property Image ${index + 1}`}
-                        className='object-cover h-[400px] w-full rounded-xl'
-                        width={1000}
-                        height={600}
-                      />
-                    )}
-                  </Item>
-                </div>
-              ))}
-            </div>
-          )}
+                  {({ ref, open }) => (
+                    <img
+                      ref={ref}
+                      onClick={open}
+                      src={imageUrl}
+                      alt={`Property Image ${index + 1}`}
+                      className='object-cover h-[400px] w-full rounded-xl cursor-pointer hover:opacity-90'
+                    />
+                  )}
+                </Item>
+              );
+            })}
+          </div>
         </div>
       </section>
     </Gallery>
