@@ -81,4 +81,4 @@ const PropertyImages = ({ images }) => {
 
 export default PropertyImages;
 
-export default PropertyImages;
+
