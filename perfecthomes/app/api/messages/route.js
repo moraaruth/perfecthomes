@@ -1,3 +1,5 @@
+import nodemailer from 'nodemailer';
+
 export const dynamic = 'force-dynamic';
 
 // GET /api/messages
@@ -17,9 +19,30 @@ export const GET = async (request) => {
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    console.log('Message received:', body);
     
-    return new Response(JSON.stringify({ message: 'Message received' }), { status: 200 });
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: 'mnjosiah@gmail.com',
+      subject: 'New Property Message - Perfect Homes',
+      html: `
+        <h2>New Property Message</h2>
+        <p><strong>Name:</strong> ${body.name}</p>
+        <p><strong>Email:</strong> ${body.email}</p>
+        <p><strong>Phone:</strong> ${body.phone}</p>
+        <p><strong>Message:</strong></p>
+        <p>${body.message}</p>
+      `
+    });
+    
+    return new Response(JSON.stringify({ message: 'Message sent' }), { status: 200 });
   } catch (error) {
     console.error('POST /api/messages error:', error);
     return new Response(JSON.stringify({ error: 'Something went wrong' }), { 
