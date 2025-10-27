@@ -6,22 +6,28 @@ import cloudinary from '@/config/cloudinary';
 // GET /api/properties
 export const GET = async (request) => {
   try {
-    if (!process.env.MONGODB_URI || process.env.MONGODB_URI === 'your_mongodb_connection_string_here') {
-      return new Response('Database not configured', { status: 500 });
-    }
-    await connectDB();
+    const fs = require('fs');
+    const path = require('path');
+    
+    const propertiesPath = path.join(process.cwd(), 'properties.json');
+    const propertiesData = JSON.parse(fs.readFileSync(propertiesPath, 'utf8'));
+    
+    // Add proper image paths
+    const properties = propertiesData.map(property => ({
+      ...property,
+      _id: property.owner + Math.random().toString(36).substr(2, 9),
+      images: property.images.map(img => `/images/${img}`)
+    }));
 
-    const page = request.nextUrl.searchParams.get('page') || 1;
-    const pageSize = request.nextUrl.searchParams.get('pageSize') || 6;
-
+    const page = parseInt(request.nextUrl.searchParams.get('page')) || 1;
+    const pageSize = parseInt(request.nextUrl.searchParams.get('pageSize')) || 6;
     const skip = (page - 1) * pageSize;
-
-    const total = await Property.countDocuments({});
-    const properties = await Property.find({}).skip(skip).limit(pageSize);
+    
+    const paginatedProperties = properties.slice(skip, skip + pageSize);
 
     const result = {
-      total,
-      properties,
+      total: properties.length,
+      properties: paginatedProperties,
     };
 
     return new Response(JSON.stringify(result), {
