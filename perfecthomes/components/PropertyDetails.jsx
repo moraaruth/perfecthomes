@@ -132,7 +132,7 @@ const PropertyDetails = ({ property }) => {
   return (
     <main>
       {/* 🖼️ Image Section */}
-      {property.images && property.images.length > 0 && (
+      {/* {property.images && property.images.length > 0 && (
         <div className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {property.images.map((img, index) => (
@@ -150,7 +150,7 @@ const PropertyDetails = ({ property }) => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
         <div className="text-gray-500 mb-4">{property.type}</div>
