@@ -760,7 +760,7 @@ const handleSubmit = async (e) => {
             htmlFor='images'
             className='block text-gray-700 font-bold mb-2'
           >
-            Images (Select multiple images)
+            Images (Select up to 50 images)
           </label>
           <input
             type='file'
@@ -774,7 +774,19 @@ const handleSubmit = async (e) => {
           />
           {fields.images.length > 0 && (
             <div className='mt-2'>
-              <p className='text-sm text-gray-600'>{fields.images.length} image(s) selected</p>
+              <p className='text-sm text-gray-600'>
+                {fields.images.length} image(s) selected
+                {fields.images.length > 50 && (
+                  <span className='text-red-500 ml-2'>⚠️ Maximum 50 images recommended</span>
+                )}
+              </p>
+              <div className='mt-2 max-h-32 overflow-y-auto'>
+                {fields.images.map((image, index) => (
+                  <div key={index} className='text-xs text-gray-500 truncate'>
+                    {index + 1}. {image.name}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div> 
