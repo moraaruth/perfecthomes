@@ -2,6 +2,18 @@
 import { Gallery, Item } from 'react-photoswipe-gallery';
 
 const PropertyImages = ({ images }) => {
+  console.log('PropertyImages received:', images);
+  
+  if (!images || images.length === 0) {
+    return (
+      <section className='bg-blue-50 p-4'>
+        <div className='container mx-auto text-center'>
+          <p className='text-gray-500'>No images available</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <Gallery>
       <section className='bg-blue-50 p-4'>
