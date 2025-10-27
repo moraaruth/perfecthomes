@@ -6,28 +6,9 @@ import cloudinary from '@/config/cloudinary';
 // GET /api/properties
 export const GET = async (request) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    
-    const propertiesPath = path.join(process.cwd(), 'properties.json');
-    const propertiesData = JSON.parse(fs.readFileSync(propertiesPath, 'utf8'));
-    
-    // Add proper image paths
-    const properties = propertiesData.map(property => ({
-      ...property,
-      _id: property.owner + Math.random().toString(36).substr(2, 9),
-      images: property.images.map(img => `/images/${img}`)
-    }));
-
-    const page = parseInt(request.nextUrl.searchParams.get('page')) || 1;
-    const pageSize = parseInt(request.nextUrl.searchParams.get('pageSize')) || 6;
-    const skip = (page - 1) * pageSize;
-    
-    const paginatedProperties = properties.slice(skip, skip + pageSize);
-
     const result = {
-      total: properties.length,
-      properties: paginatedProperties,
+      total: 0,
+      properties: [],
     };
 
     return new Response(JSON.stringify(result), {
