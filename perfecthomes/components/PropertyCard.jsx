@@ -16,7 +16,7 @@ const PropertyCard = ({ property }) => {
   }
   return (
     <div className="rounded-xl shadow-md relative">
-{/* 
+
       <Image
         src={property.images?.[0] || '/placeholder.jpg'}
         alt={property.name || 'Property'}
@@ -24,8 +24,8 @@ const PropertyCard = ({ property }) => {
         width={0}
         sizes='100vw'
         className='w-full h-auto rounded-t-xl'
-      /> */}
-        {property.images && property.images.length > 0 && (
+      />
+        {/* {property.images && property.images.length > 0 && (
               <div className="mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {property.images.map((img, index) => (
@@ -43,7 +43,7 @@ const PropertyCard = ({ property }) => {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
           <div className="text-gray-600">{property.type || 'Property'}</div>
