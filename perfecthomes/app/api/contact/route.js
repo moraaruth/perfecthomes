@@ -13,9 +13,9 @@ export async function POST(request) {
       }
     })
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: 'mnjosiah@gmail.com',
+      to: 'phomeskenya@gmail.com',
       subject: 'New Contact Form Submission - Perfect Homes',
       html: `
         <h2>New Contact Form Submission</h2>
@@ -24,9 +24,7 @@ export async function POST(request) {
         <p><strong>Comments:</strong></p>
         <p>${data.comments}</p>
       `
-    }
-
-    await transporter.sendMail(mailOptions)
+    })
     
     return NextResponse.json({ 
       message: 'Contact form submitted successfully'
