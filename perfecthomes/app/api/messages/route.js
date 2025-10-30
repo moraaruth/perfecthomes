@@ -30,7 +30,7 @@ export const POST = async (request) => {
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: 'mnjosiah@gmail.com',
+      to: 'phomeskenya@gmail.com',
       subject: 'New Property Message - Perfect Homes',
       html: `
         <h2>New Property Message</h2>
