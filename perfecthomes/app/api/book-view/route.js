@@ -5,6 +5,14 @@ export async function POST(request) {
   try {
     const data = await request.json()
     
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error('Email credentials missing')
+      return NextResponse.json(
+        { error: 'Email service not configured' },
+        { status: 500 }
+      )
+    }
+    
     const transporter = nodemailer.createTransporter({
       service: 'gmail',
       auth: {
@@ -34,9 +42,9 @@ export async function POST(request) {
     })
     
   } catch (error) {
-    console.error('Error processing booking request:', error)
+    console.error('Email error:', error.message)
     return NextResponse.json(
-      { error: 'Failed to process booking request' },
+      { error: 'Failed to send booking request' },
       { status: 500 }
     )
   }
