@@ -1,45 +1,42 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
 
 export async function POST(request) {
   try {
     const data = await request.json()
     
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error('Email credentials missing')
-      return NextResponse.json(
-        { error: 'Email service not configured' },
-        { status: 500 }
-      )
-    }
-    
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+    // Send email using fetch to EmailJS service
+    const emailData = {
+      service_id: process.env.EMAILJS_SERVICE_ID,
+      template_id: process.env.EMAILJS_TEMPLATE_ID,
+      user_id: process.env.EMAILJS_PUBLIC_KEY,
+      template_params: {
+        to_email: 'phomeskenya@gmail.com',
+        from_name: `${data.firstName} ${data.lastName}`,
+        from_email: data.email,
+        contact: data.contact,
+        date: `${data.month}/${data.day}/${data.year}`,
+        location: data.location,
+        house_type: data.houseType,
+        notes: data.notes,
+        subject: 'New Property Viewing Request - Perfect Homes'
       }
+    }
+
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
     })
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: 'phomeskenya@gmail.com',
-      subject: 'New Property Viewing Request - Perfect Homes',
-      html: `
-        <h2>New Property Viewing Request</h2>
-        <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Contact:</strong> ${data.contact}</p>
-        <p><strong>Preferred Date:</strong> ${data.month}/${data.day}/${data.year}</p>
-        <p><strong>Location:</strong> ${data.location}</p>
-        <p><strong>House Type:</strong> ${data.houseType}</p>
-        <p><strong>Notes:</strong> ${data.notes}</p>
-      `
-    })
-    
-    return NextResponse.json({ 
-      message: 'Booking request sent successfully'
-    })
+    if (response.ok) {
+      return NextResponse.json({ 
+        message: 'Booking request sent successfully'
+      })
+    } else {
+      throw new Error('EmailJS failed')
+    }
     
   } catch (error) {
     console.error('Email error:', error.message)
