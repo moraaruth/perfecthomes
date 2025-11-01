@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { FaCalendar, FaHome, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'
+import emailjs from '@emailjs/browser'
 
 const BookViewPage = () => {
   const [formData, setFormData] = useState({
@@ -40,33 +41,41 @@ const BookViewPage = () => {
     setIsSubmitting(true)
     
     try {
-      const response = await fetch('/api/book-view', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Send email using EmailJS
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        {
+          to_name: 'Perfect Homes',
+          to_email: 'phomeskenya@gmail.com',
+          from_name: `${formData.firstName} ${formData.lastName}`,
+          from_email: formData.email,
+          contact: formData.contact,
+          date: `${formData.month}/${formData.day}/${formData.year}`,
+          location: formData.location,
+          house_type: formData.houseType,
+          notes: formData.notes,
+          subject: 'New Property Viewing Request - Perfect Homes'
         },
-        body: JSON.stringify(formData),
-      })
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      )
 
-      if (response.ok) {
-        setMessage('Your booking request has been sent successfully!')
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          contact: '',
-          month: '',
-          day: '',
-          year: '',
-          location: '',
-          houseType: '',
-          notes: ''
-        })
-      } else {
-        setMessage('Failed to send request. Please try again.')
-      }
+      setMessage('Your booking request has been sent successfully!')
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        contact: '',
+        month: '',
+        day: '',
+        year: '',
+        location: '',
+        houseType: '',
+        notes: ''
+      })
     } catch (error) {
-      setMessage('An error occurred. Please try again.')
+      console.error('EmailJS error:', error)
+      setMessage('Failed to send request. Please try again.')
     }
     
     setIsSubmitting(false)
