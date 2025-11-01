@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { FaMapMarkerAlt, FaPhone, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaTiktok } from 'react-icons/fa'
+import emailjs from '@emailjs/browser'
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -25,27 +26,30 @@ const ContactPage = () => {
     setIsSubmitting(true)
     
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        {
+          to_name: 'Perfect Homes',
+          to_email: 'phomeskenya@gmail.com',
+          from_name: `${formData.firstName} ${formData.lastName}`,
+          from_email: formData.email,
+          message: formData.comments,
+          subject: 'New Contact Form Submission - Perfect Homes'
         },
-        body: JSON.stringify(formData),
-      })
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      )
 
-      if (response.ok) {
-        setMessage('Your message has been sent successfully!')
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          comments: ''
-        })
-      } else {
-        setMessage('Failed to send message. Please try again.')
-      }
+      setMessage('Your message has been sent successfully!')
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        comments: ''
+      })
     } catch (error) {
-      setMessage('An error occurred. Please try again.')
+      console.error('EmailJS error:', error)
+      setMessage('Failed to send message. Please try again.')
     }
     
     setIsSubmitting(false)
