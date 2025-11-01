@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import emailjs from '@emailjs/browser';
 
 const PropertyContactForm = ({ property }) => {
   const [name, setName] = useState('');
@@ -13,37 +14,31 @@ const PropertyContactForm = ({ property }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      name,
-      email,
-      phone,
-      message,
-      recipient: property.owner,
-      property: property._id,
-    };
-
     try {
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        {
+          to_name: 'Perfect Homes',
+          to_email: 'phomeskenya@gmail.com',
+          from_name: name,
+          from_email: email,
+          phone: phone,
+          message: message,
+          property_name: property.name,
+          subject: 'New Property Message - Perfect Homes'
         },
-        body: JSON.stringify(data),
-      });
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      );
 
-      if (res.ok) {
-        toast.success('Message sent successfully!');
-        setWasSubmitted(true);
-        setName('');
-        setEmail('');
-        setPhone('');
-        setMessage('');
-      } else {
-        const errorData = await res.json().catch(() => ({ message: 'Unknown error' }));
-        toast.error(errorData.message || 'Error sending form');
-      }
+      toast.success('Message sent successfully!');
+      setWasSubmitted(true);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('EmailJS error:', error);
       toast.error('Error sending form. Please try again.');
     }
   };
