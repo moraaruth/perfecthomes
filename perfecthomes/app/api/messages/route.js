@@ -1,5 +1,3 @@
-import nodemailer from 'nodemailer';
-
 export const dynamic = 'force-dynamic';
 
 // GET /api/messages
@@ -20,29 +18,33 @@ export const POST = async (request) => {
   try {
     const body = await request.json();
     
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+    const emailData = {
+      service_id: process.env.EMAILJS_SERVICE_ID,
+      template_id: process.env.EMAILJS_TEMPLATE_ID,
+      user_id: process.env.EMAILJS_PUBLIC_KEY,
+      template_params: {
+        to_email: 'phomeskenya@gmail.com',
+        from_name: body.name,
+        from_email: body.email,
+        phone: body.phone,
+        message: body.message,
+        subject: 'New Property Message - Perfect Homes'
       }
-    });
+    }
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: 'phomeskenya@gmail.com',
-      subject: 'New Property Message - Perfect Homes',
-      html: `
-        <h2>New Property Message</h2>
-        <p><strong>Name:</strong> ${body.name}</p>
-        <p><strong>Email:</strong> ${body.email}</p>
-        <p><strong>Phone:</strong> ${body.phone}</p>
-        <p><strong>Message:</strong></p>
-        <p>${body.message}</p>
-      `
-    });
-    
-    return new Response(JSON.stringify({ message: 'Message sent' }), { status: 200 });
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
+    })
+
+    if (response.ok) {
+      return new Response(JSON.stringify({ message: 'Message sent' }), { status: 200 });
+    } else {
+      throw new Error('EmailJS failed')
+    }
   } catch (error) {
     console.error('POST /api/messages error:', error);
     return new Response(JSON.stringify({ error: 'Something went wrong' }), { 
