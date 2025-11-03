@@ -12,12 +12,10 @@ import ShareButtons from '@/components/ShareButtons';
 import Spinner from '@/components/Spinner';
 import { FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 const PropertyPage = () => {
   const { id } = useParams();
   const { data: session } = useSession();
-  const router = useRouter();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +46,7 @@ const handleDelete = async () => {
     });
     
     if (res.ok) {
-      router.push('/properties');
+      window.location.href = '/properties';
     } else {
       alert('Failed to delete property');
     }
@@ -58,7 +56,7 @@ const handleDelete = async () => {
   }
 };
 
-const isOwner = session?.user?.email && property?.owner && 
+const isOwner = session?.user?.email && 
   (session.user.email === 'mnjosiah@gmail.com' || session.user.email === 'iammoraaruth@gmail.com');
 
   // useEffect(() => {
