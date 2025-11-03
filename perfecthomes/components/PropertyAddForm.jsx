@@ -119,9 +119,8 @@ const PropertyAddForm = () => {
       for (const file of files) {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', 'ram21zim');
 
-        const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+        const res = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
