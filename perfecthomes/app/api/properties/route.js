@@ -3,6 +3,14 @@ import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import cloudinary from '@/config/cloudinary';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb',
+    },
+  },
+};
+
 // GET /api/properties
 export const GET = async (request) => {
   try {
@@ -38,6 +46,7 @@ export const GET = async (request) => {
 export const POST = async (request) => {
   try {
     console.log('POST /api/properties - Starting request');
+    console.log('Request size - Content-Length:', request.headers.get('content-length'));
     
     const sessionUser = await getSessionUser();
     console.log('Session user:', sessionUser);
