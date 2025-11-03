@@ -32,8 +32,11 @@ const PropertyEditForm = () => {
       email: '',
       phone: '',
     },
+    images: [],
   });
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -87,6 +90,52 @@ const PropertyEditForm = () => {
       }));
     }
   };
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadPromises = files.map(async (file, index) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) throw new Error(`Upload failed for image ${index + 1}`);
+        const data = await res.json();
+        
+        setUploadProgress(prev => prev + (100 / files.length));
+        return data.secure_url;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+
+      setFields((prevFields) => ({
+        ...prevFields,
+        images: [...prevFields.images, ...uploadedImages],
+      }));
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Some images failed to upload. Please try again.');
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const removeImage = (indexToRemove) => {
+    setFields((prevFields) => ({
+      ...prevFields,
+      images: prevFields.images.filter((_, index) => index !== indexToRemove),
+    }));
+  };
+
   const handleAmenitiesChange = (e) => {
     const { value, checked } = e.target;
 
@@ -116,11 +165,24 @@ const PropertyEditForm = () => {
     e.preventDefault();
 
     try {
-      const formData = new FormData(e.target);
+      const propertyData = {
+        type: fields.type,
+        name: fields.name,
+        description: fields.description,
+        location: fields.location,
+        beds: fields.beds,
+        baths: fields.baths,
+        square_feet: fields.square_feet,
+        amenities: fields.amenities,
+        rates: fields.rates,
+        seller_info: fields.seller_info,
+        images: fields.images,
+      };
 
       const res = await fetch(`/api/properties/${id}`, {
         method: 'PUT',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(propertyData),
       });
 
       if (res.status === 200) {
@@ -580,6 +642,58 @@ const PropertyEditForm = () => {
             value={fields.seller_info.phone}
             onChange={handleChange}
           />
+        </div>
+
+        <div className='mb-4'>
+          <label className='block text-gray-700 font-bold mb-2'>
+            Current Images
+          </label>
+          {fields.images && fields.images.length > 0 ? (
+            <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
+              {fields.images.map((image, index) => (
+                <div key={index} className='relative'>
+                  <img
+                    src={image.url || image}
+                    alt={`Property Image ${index + 1}`}
+                    className='w-full h-32 object-cover rounded'
+                  />
+                  <button
+                    type='button'
+                    onClick={() => removeImage(index)}
+                    className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600'
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className='text-gray-500 mb-4'>No images uploaded</p>
+          )}
+          
+          <label
+            htmlFor='images'
+            className='block text-gray-700 font-bold mb-2'
+          >
+            Add New Images
+          </label>
+          <input
+            type='file'
+            id='images'
+            name='images'
+            className='border rounded w-full py-2 px-3'
+            accept='image/*'
+            multiple
+            onChange={handleImageChange}
+          />
+          {uploading && (
+            <div className='mt-2'>
+              <p className='text-sm text-blue-600'>Uploading images... {Math.round(uploadProgress)}%</p>
+              <div className='w-full bg-gray-200 rounded-full h-2'>
+                <div className='bg-blue-600 h-2 rounded-full transition-all duration-300' style={{width: `${uploadProgress}%`}}></div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
