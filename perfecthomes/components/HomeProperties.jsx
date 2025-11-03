@@ -5,10 +5,10 @@ import { fetchProperties } from '@/utils/requests'
 
 const HomeProperties = async () => {
   const data = await fetchProperties();
-  // Check if data.properties is defined before sorting
+  // Get 3 latest properties by creation date
   const recentProperties = data.properties
     ? data.properties
-        .sort(() => Math.random() - Math.random())
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 3)
     : []; 
   return (
