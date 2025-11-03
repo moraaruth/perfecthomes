@@ -62,53 +62,22 @@ export const POST = async (request) => {
 
     const { userId } = sessionUser;
 
-    const formData = await request.formData();
-
-    const amenities = formData.getAll('amenities');
-    const images = formData.getAll('images').filter((image) => image.name !== '');
+    const body = await request.json();
 
     const propertyData = {
-      type: formData.get('type'),
-      name: formData.get('name'),
-      description: formData.get('description'),
-      location: {
-        street: formData.get('location.street'),
-        city: formData.get('location.city'),
-      },
-      beds: formData.get('beds'),
-      baths: formData.get('baths'),
-      square_feet: formData.get('square_feet'),
-      amenities,
-      rates: {
-        weekly: formData.get('rates.weekly'),
-        sale: formData.get('rates.sale'),
-        monthly: formData.get('rates.monthly'),
-        nightly: formData.get('rates.nightly'),
-      },
-      seller_info: {
-        name: formData.get('seller_info.name'),
-        email: formData.get('seller_info.email'),
-        phone: formData.get('seller_info.phone'),
-      },
+      type: body.type,
+      name: body.name,
+      description: body.description,
+      location: body.location,
+      beds: body.beds,
+      baths: body.baths,
+      square_feet: body.square_feet,
+      amenities: body.amenities,
+      rates: body.rates,
+      seller_info: body.seller_info,
+      images: body.images,
       owner: userId,
     };
-
-    const uploadedImages = [];
-    for (const image of images) {
-      const imageBuffer = await image.arrayBuffer();
-      const imageArray = Array.from(new Uint8Array(imageBuffer));
-      const imageData = Buffer.from(imageArray);
-      const imageType = image.type.split('/')[1];
-      const imageBase64 = imageData.toString('base64');
-
-      const result = await cloudinary.uploader.upload(
-        `data:image/${imageType};base64,${imageBase64}`,
-        { folder: 'propertypulse' }
-      );
-      uploadedImages.push(result.secure_url);
-    }
-
-    propertyData.images = uploadedImages;
 
     // ✅ Save to MongoDB
     const newProperty = new Property(propertyData);
