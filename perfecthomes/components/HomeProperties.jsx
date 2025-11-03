@@ -1,16 +1,31 @@
-import PropertiesPage from '@/app/properties/page'
+'use client';
 import Link from 'next/link'
 import PropertyCard from '@/components/PropertyCard'
-import { fetchProperties } from '@/utils/requests'
+import { useState, useEffect } from 'react'
 
-const HomeProperties = async () => {
-  const data = await fetchProperties();
-  // Get 3 latest properties by creation date
-  const recentProperties = data.properties
-    ? data.properties
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3)
-    : []; 
+const HomeProperties = () => {
+  const [recentProperties, setRecentProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/properties');
+        const data = await res.json();
+        const latest = data.properties
+          ? data.properties
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .slice(0, 3)
+          : [];
+        setRecentProperties(latest);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []); 
   return (
     <>
       <section className='px-4 py-6'>
@@ -19,7 +34,9 @@ const HomeProperties = async () => {
             Recent Properties
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            {recentProperties.length === 0 ? (
+            {loading ? (
+              <p>Loading...</p>
+            ) : recentProperties.length === 0 ? (
               <p>No Properties Found</p>
             ) : (
               recentProperties.map((property) => (
