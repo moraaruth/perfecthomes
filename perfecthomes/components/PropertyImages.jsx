@@ -1,11 +1,23 @@
 'use client';
 import Image from 'next/image';
 import { Gallery, Item } from 'react-photoswipe-gallery';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const PropertyImages = ({ images }) => {
-  const [galleryError, setGalleryError] = useState(true); // Force regular images for testing
+  const [galleryError, setGalleryError] = useState(true);
   const [failedImages, setFailedImages] = useState(new Set());
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = 320;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   if (!images || images.length === 0) {
     return (
@@ -26,8 +38,21 @@ const PropertyImages = ({ images }) => {
     return (
       <section className='bg-blue-50 p-4'>
         <div className='container mx-auto'>
-          <div className='overflow-x-auto scrollbar-hide'>
-            <div className='flex gap-4 pb-4' style={{width: `${images.length * 320}px`}}>
+          <div className='relative'>
+            <button 
+              onClick={() => scroll('left')}
+              className='absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg'
+            >
+              <FaChevronLeft className='text-gray-700' />
+            </button>
+            <button 
+              onClick={() => scroll('right')}
+              className='absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg'
+            >
+              <FaChevronRight className='text-gray-700' />
+            </button>
+            <div ref={scrollRef} className='overflow-x-auto scrollbar-hide'>
+              <div className='flex gap-4 pb-4' style={{width: `${images.length * 320}px`}}>
               {images.map((image, index) => {
                 const imageUrl = image.url || image;
                 if (failedImages.has(index)) {
@@ -50,9 +75,10 @@ const PropertyImages = ({ images }) => {
                   </div>
                 );
               })}
+              </div>
             </div>
           </div>
-          <p className='text-center text-gray-600 mt-2'>Swipe to see more images</p>
+          <p className='text-center text-gray-600 mt-2'>Swipe or use arrows to see more images</p>
         </div>
         <style jsx>{`
           .scrollbar-hide {
