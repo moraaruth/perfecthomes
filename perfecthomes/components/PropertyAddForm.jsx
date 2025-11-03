@@ -7,6 +7,7 @@ const PropertyAddForm = () => {
   const [propertyImages, setPropertyImages] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -113,10 +114,10 @@ const PropertyAddForm = () => {
     if (files.length === 0) return;
 
     setUploading(true);
-    const uploadedImages = [];
+    setUploadProgress(0);
 
     try {
-      for (const file of files) {
+      const uploadPromises = files.map(async (file, index) => {
         const formData = new FormData();
         formData.append('file', file);
 
@@ -125,19 +126,25 @@ const PropertyAddForm = () => {
           body: formData,
         });
 
-        if (!res.ok) throw new Error('Upload failed');
+        if (!res.ok) throw new Error(`Upload failed for image ${index + 1}`);
         const data = await res.json();
-        uploadedImages.push(data.secure_url);
-      }
+        
+        setUploadProgress(prev => prev + (100 / files.length));
+        return data.secure_url;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
 
       setFields((prevFields) => ({
         ...prevFields,
         images: uploadedImages,
       }));
     } catch (error) {
-      alert('Image upload failed. Please try again.');
+      console.error('Upload error:', error);
+      alert('Some images failed to upload. Please try again.');
     } finally {
       setUploading(false);
+      setUploadProgress(0);
     }
   };
 // const handleImageChange = async (e) => {
@@ -795,7 +802,10 @@ const handleSubmit = async (e) => {
           />
           {uploading && (
             <div className='mt-2'>
-              <p className='text-sm text-blue-600'>Uploading images...</p>
+              <p className='text-sm text-blue-600'>Uploading images... {Math.round(uploadProgress)}%</p>
+              <div className='w-full bg-gray-200 rounded-full h-2'>
+                <div className='bg-blue-600 h-2 rounded-full transition-all duration-300' style={{width: `${uploadProgress}%`}}></div>
+              </div>
             </div>
           )}
           {fields.images.length > 0 && (
