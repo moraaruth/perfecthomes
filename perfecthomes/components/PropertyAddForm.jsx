@@ -137,7 +137,7 @@ const PropertyAddForm = () => {
 
       setFields((prevFields) => ({
         ...prevFields,
-        images: uploadedImages,
+        images: [...prevFields.images, ...uploadedImages],
       }));
     } catch (error) {
       console.error('Upload error:', error);
