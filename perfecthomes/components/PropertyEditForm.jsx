@@ -57,7 +57,14 @@ const PropertyEditForm = () => {
           propertyData.rates = defaultRates;
         }
 
-        setFields(propertyData);
+        setFields({
+          ...propertyData,
+          amenities: propertyData?.amenities || [],
+          images: propertyData?.images || [],
+          location: propertyData?.location || { street: '', city: '' },
+          rates: propertyData?.rates || { weekly: '', monthly: '', daily: '', sale: '' },
+          seller_info: propertyData?.seller_info || { name: '', email: '', phone: '' }
+        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -198,9 +205,11 @@ const PropertyEditForm = () => {
     }
   };
 
+  if (!mounted || loading || !fields) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    mounted &&
-    !loading && (
       <form onSubmit={handleSubmit}>
         <h2 className='text-3xl text-center font-semibold mb-6'>
           Edit Property
@@ -705,7 +714,6 @@ const PropertyEditForm = () => {
           </button>
         </div>
       </form>
-    )
   );
 };
 export default PropertyEditForm;
