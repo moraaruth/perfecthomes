@@ -10,10 +10,14 @@ import BookmarkButton from '@/components/BookmarkButton';
 import PropertyContactForm from '@/components/PropertyContactForm';
 import ShareButtons from '@/components/ShareButtons';
 import Spinner from '@/components/Spinner';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const PropertyPage = () => {
   const { id } = useParams();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +38,28 @@ useEffect(() => {
 
   fetchPropertyData();
 }, [id]);
+
+const handleDelete = async () => {
+  if (!confirm('Are you sure you want to delete this property?')) return;
+  
+  try {
+    const res = await fetch(`/api/properties/${id}`, {
+      method: 'DELETE',
+    });
+    
+    if (res.ok) {
+      router.push('/properties');
+    } else {
+      alert('Failed to delete property');
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    alert('Error deleting property');
+  }
+};
+
+const isOwner = session?.user?.email && property?.owner && 
+  (session.user.email === 'mnjosiah@gmail.com' || session.user.email === 'iammoraaruth@gmail.com');
 
   // useEffect(() => {
   //   const fetchPropertyData = async () => {
@@ -69,13 +95,32 @@ useEffect(() => {
           <PropertyHeaderImage image={property.images[0]} />
           <section>
             <div className='container m-auto py-6 px-6'>
-              <Link
-                href='/properties'
-                className='flex items-center hover:opacity-80'
-                style={{ color: '#800080' }}
-              >
-                <FaArrowLeft className='mr-2' /> Back to Properties
-              </Link>
+              <div className='flex justify-between items-center'>
+                <Link
+                  href='/properties'
+                  className='flex items-center hover:opacity-80'
+                  style={{ color: '#800080' }}
+                >
+                  <FaArrowLeft className='mr-2' /> Back to Properties
+                </Link>
+                
+                {isOwner && (
+                  <div className='flex gap-2'>
+                    <Link
+                      href={`/properties/${id}/edit`}
+                      className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center'
+                    >
+                      <FaEdit className='mr-1' /> Edit
+                    </Link>
+                    <button
+                      onClick={handleDelete}
+                      className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded flex items-center'
+                    >
+                      <FaTrash className='mr-1' /> Delete
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </section>
 
