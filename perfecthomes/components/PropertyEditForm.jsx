@@ -215,7 +215,7 @@ const PropertyEditForm = () => {
             name='type'
             className='border rounded w-full py-2 px-3'
             required
-            value={fields.type}
+            value={fields?.type || ''}
             onChange={handleChange}
           >
             <option value='Apartment'>Apartment</option>
@@ -238,7 +238,7 @@ const PropertyEditForm = () => {
             className='border rounded w-full py-2 px-3 mb-2'
             placeholder='eg. Beautiful Apartment In Nairobi'
             required
-            value={fields.name}
+            value={fields?.name || ''}
             onChange={handleChange}
           />
         </div>
@@ -255,7 +255,7 @@ const PropertyEditForm = () => {
             className='border rounded w-full py-2 px-3'
             rows='4'
             placeholder='Add an optional description of your property'
-            value={fields.description}
+            value={fields?.description || ''}
             onChange={handleChange}
           ></textarea>
         </div>
@@ -268,7 +268,7 @@ const PropertyEditForm = () => {
             name='location.street'
             className='border rounded w-full py-2 px-3 mb-2'
             placeholder='Street'
-            value={fields.location.street}
+            value={fields?.location?.street || ''}
             onChange={handleChange}
           />
           <input
@@ -278,7 +278,7 @@ const PropertyEditForm = () => {
             className='border rounded w-full py-2 px-3 mb-2'
             placeholder='City'
             required
-            value={fields.location.city}
+            value={fields?.location?.city || ''}
             onChange={handleChange}
           />
         
@@ -299,7 +299,7 @@ const PropertyEditForm = () => {
               name='beds'
               className='border rounded w-full py-2 px-3'
               required
-              value={fields.beds}
+              value={fields?.beds || ''}
               onChange={handleChange}
             />
           </div>
@@ -316,7 +316,7 @@ const PropertyEditForm = () => {
               name='baths'
               className='border rounded w-full py-2 px-3'
               required
-              value={fields.baths}
+              value={fields?.baths || ''}
               onChange={handleChange}
             />
           </div>
@@ -333,7 +333,7 @@ const PropertyEditForm = () => {
               name='square_feet'
               className='border rounded w-full py-2 px-3'
               required
-              value={fields.square_feet}
+              value={fields?.square_feet || ''}
               onChange={handleChange}
             />
           </div>
@@ -351,7 +351,7 @@ const PropertyEditForm = () => {
                 name='amenities'
                 value='Wifi'
                 className='mr-2'
-                checked={fields.amenities.includes('Wifi')}
+                checked={fields?.amenities?.includes('Wifi') || false}
                 onChange={handleAmenitiesChange}
               />
               <label htmlFor='amenity_wifi'>Wifi</label>
@@ -363,7 +363,7 @@ const PropertyEditForm = () => {
                 name='amenities'
                 value='Full Kitchen'
                 className='mr-2'
-                checked={fields.amenities.includes('Full Kitchen')}
+                checked={fields?.amenities?.includes('Full Kitchen') || false}
                 onChange={handleAmenitiesChange}
               />
               <label htmlFor='amenity_kitchen'>Full kitchen</label>
@@ -375,7 +375,7 @@ const PropertyEditForm = () => {
                 name='amenities'
                 value='Washer & Dryer'
                 className='mr-2'
-                checked={fields.amenities.includes('Washer & Dryer')}
+                checked={fields?.amenities?.includes('Washer & Dryer') || false}
                 onChange={handleAmenitiesChange}
               />
               <label htmlFor='amenity_washer_dryer'>Washer & Dryer</label>
@@ -387,7 +387,7 @@ const PropertyEditForm = () => {
                 name='amenities'
                 value='Free Parking'
                 className='mr-2'
-                checked={fields.amenities.includes('Free Parking')}
+                checked={fields?.amenities?.includes('Free Parking') || false}
                 onChange={handleAmenitiesChange}
               />
               <label htmlFor='amenity_free_parking'>Free Parking</label>
@@ -545,7 +545,7 @@ const PropertyEditForm = () => {
                 id='weekly_rate'
                 name='rates.weekly'
                 className='border rounded w-full py-2 px-3'
-                value={fields.rates.weekly}
+                value={fields?.rates?.weekly || ''}
                 onChange={handleChange}
               />
             </div>
@@ -558,7 +558,7 @@ const PropertyEditForm = () => {
                 id='sale_rate'
                 name='rates.sale'
                 className='border rounded w-full py-2 px-3'
-                value={fields.rates.sale}
+                value={fields?.rates?.sale || ''}
                 onChange={handleChange}
               />
             </div>
@@ -571,7 +571,7 @@ const PropertyEditForm = () => {
                 id='monthly_rate'
                 name='rates.monthly'
                 className='border rounded w-full py-2 px-3'
-                value={fields.rates.monthly}
+                value={fields?.rates?.monthly || ''}
                 onChange={handleChange}
               />
             </div>
@@ -604,7 +604,7 @@ const PropertyEditForm = () => {
             name='seller_info.name'
             className='border rounded w-full py-2 px-3'
             placeholder='Name'
-            value={fields.seller_info.name}
+            value={fields?.seller_info?.name || ''}
             onChange={handleChange}
           />
         </div>
@@ -622,7 +622,7 @@ const PropertyEditForm = () => {
             className='border rounded w-full py-2 px-3'
             placeholder='Email address'
             required
-            value={fields.seller_info.email}
+            value={fields?.seller_info?.email || ''}
             onChange={handleChange}
           />
         </div>
@@ -639,7 +639,7 @@ const PropertyEditForm = () => {
             name='seller_info.phone'
             className='border rounded w-full py-2 px-3'
             placeholder='Phone'
-            value={fields.seller_info.phone}
+            value={fields?.seller_info?.phone || ''}
             onChange={handleChange}
           />
         </div>
