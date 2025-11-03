@@ -4,8 +4,6 @@ import { Gallery, Item } from 'react-photoswipe-gallery';
 import { useState } from 'react';
 
 const PropertyImages = ({ images }) => {
-  console.log('PropertyImages - First image (header uses):', images[0]);
-  console.log('PropertyImages - All images:', images);
   const [galleryError, setGalleryError] = useState(true); // Force regular images for testing
   const [failedImages, setFailedImages] = useState(new Set());
 
@@ -28,31 +26,43 @@ const PropertyImages = ({ images }) => {
     return (
       <section className='bg-blue-50 p-4'>
         <div className='container mx-auto'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {images.map((image, index) => {
-              const imageUrl = image.url || image;
-              if (failedImages.has(index)) {
+          <div className='overflow-x-auto scrollbar-hide'>
+            <div className='flex gap-4 pb-4' style={{width: `${images.length * 320}px`}}>
+              {images.map((image, index) => {
+                const imageUrl = image.url || image;
+                if (failedImages.has(index)) {
+                  return (
+                    <div key={index} className='bg-gray-200 h-[400px] w-80 flex-shrink-0 rounded-xl flex items-center justify-center'>
+                      <p className='text-gray-500'>Image unavailable</p>
+                    </div>
+                  );
+                }
                 return (
-                  <div key={index} className='bg-gray-200 h-[400px] w-full rounded-xl flex items-center justify-center'>
-                    <p className='text-gray-500'>Image unavailable</p>
+                  <div key={index} className='relative w-80 h-[400px] flex-shrink-0 rounded-xl overflow-hidden'>
+                    <Image
+                      src={imageUrl}
+                      alt={`Property Image ${index + 1}`}
+                      fill
+                      className='object-cover'
+                      sizes='320px'
+                      onError={() => handleImageError(imageUrl, index)}
+                    />
                   </div>
                 );
-              }
-              return (
-                <div key={index} className='relative w-full h-[400px] rounded-xl overflow-hidden'>
-                  <Image
-                    src={imageUrl}
-                    alt={`Property Image ${index + 1}`}
-                    fill
-                    className='object-cover'
-                    sizes='(max-width: 768px) 100vw, 50vw'
-                    onError={() => handleImageError(imageUrl, index)}
-                  />
-                </div>
-              );
-            })}
+              })}
+            </div>
           </div>
+          <p className='text-center text-gray-600 mt-2'>Swipe to see more images</p>
         </div>
+        <style jsx>{`
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
       </section>
     );
   }
@@ -62,34 +72,46 @@ const PropertyImages = ({ images }) => {
       <Gallery>
         <section className='bg-blue-50 p-4'>
           <div className='container mx-auto'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              {images.map((image, index) => {
-                const imageUrl = image.url || image;
-                return (
-                  <Item
-                    key={index}
-                    original={imageUrl}
-                    thumbnail={imageUrl}
-                    width='1200'
-                    height='800'
-                  >
-                    {({ ref, open }) => (
-                      <div className='relative w-full h-[400px] rounded-xl overflow-hidden cursor-pointer hover:opacity-90' ref={ref} onClick={open}>
-                        <Image
-                          src={imageUrl}
-                          alt={`Property Image ${index + 1}`}
-                          fill
-                          className='object-cover'
-                          sizes='(max-width: 768px) 100vw, 50vw'
-                          onError={() => handleImageError(imageUrl, index)}
-                        />
-                      </div>
-                    )}
-                  </Item>
-                );
-              })}
+            <div className='overflow-x-auto scrollbar-hide'>
+              <div className='flex gap-4 pb-4' style={{width: `${images.length * 320}px`}}>
+                {images.map((image, index) => {
+                  const imageUrl = image.url || image;
+                  return (
+                    <Item
+                      key={index}
+                      original={imageUrl}
+                      thumbnail={imageUrl}
+                      width='1200'
+                      height='800'
+                    >
+                      {({ ref, open }) => (
+                        <div className='relative w-80 h-[400px] flex-shrink-0 rounded-xl overflow-hidden cursor-pointer hover:opacity-90' ref={ref} onClick={open}>
+                          <Image
+                            src={imageUrl}
+                            alt={`Property Image ${index + 1}`}
+                            fill
+                            className='object-cover'
+                            sizes='320px'
+                            onError={() => handleImageError(imageUrl, index)}
+                          />
+                        </div>
+                      )}
+                    </Item>
+                  );
+                })}
+              </div>
             </div>
+            <p className='text-center text-gray-600 mt-2'>Swipe to see more images</p>
           </div>
+          <style jsx>{`
+            .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
         </section>
       </Gallery>
     );
@@ -101,5 +123,3 @@ const PropertyImages = ({ images }) => {
 };
 
 export default PropertyImages;
-
-
