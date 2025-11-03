@@ -107,17 +107,27 @@ const PropertyAddForm = () => {
   //    }));
   //  };
 
-  const handleImageChange = (e) => {
-    const { files } = e.target;
-    const updatedImages = [...fields.images];
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+    const uploadedImages = [];
 
     for (const file of files) {
-      updatedImages.push(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'ram21zim');
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      uploadedImages.push(data.secure_url);
     }
 
     setFields((prevFields) => ({
       ...prevFields,
-      images: updatedImages,
+      images: uploadedImages,
     }));
   };
 // const handleImageChange = async (e) => {
@@ -266,35 +276,36 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   
   try {
-    const formData = new FormData();
-    
-    formData.append('type', fields.type);
-    formData.append('name', fields.name);
-    formData.append('description', fields.description);
-    formData.append('location.street', fields.location.street);
-    formData.append('location.city', fields.location.city);
-    formData.append('beds', fields.beds);
-    formData.append('baths', fields.baths);
-    formData.append('square_feet', fields.square_feet);
-    formData.append('rates.weekly', fields.rates.weekly);
-    formData.append('rates.sale', fields.rates.sale);
-    formData.append('rates.monthly', fields.rates.monthly);
-    formData.append('rates.nightly', fields.rates.daily);
-    formData.append('seller_info.name', fields.seller_info.name);
-    formData.append('seller_info.email', fields.seller_info.email);
-    formData.append('seller_info.phone', fields.seller_info.phone);
-    
-    fields.amenities.forEach(amenity => {
-      formData.append('amenities', amenity);
-    });
-    
-    fields.images.forEach(image => {
-      formData.append('images', image);
-    });
+    const propertyData = {
+      type: fields.type,
+      name: fields.name,
+      description: fields.description,
+      location: {
+        street: fields.location.street,
+        city: fields.location.city,
+      },
+      beds: fields.beds,
+      baths: fields.baths,
+      square_feet: fields.square_feet,
+      rates: {
+        weekly: fields.rates.weekly,
+        sale: fields.rates.sale,
+        monthly: fields.rates.monthly,
+        nightly: fields.rates.daily,
+      },
+      seller_info: {
+        name: fields.seller_info.name,
+        email: fields.seller_info.email,
+        phone: fields.seller_info.phone,
+      },
+      amenities: fields.amenities,
+      images: fields.images,
+    };
     
     const response = await fetch('/api/properties', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(propertyData),
     });
     
     if (response.ok) {
