@@ -6,6 +6,7 @@ const PropertyAddForm = () => {
   const router = useRouter();
   const [propertyImages, setPropertyImages] = useState([]);
   const [mounted, setMounted] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -109,26 +110,36 @@ const PropertyAddForm = () => {
 
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
     const uploadedImages = [];
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'ram21zim');
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'ram21zim');
 
-      const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
-        method: 'POST',
-        body: formData,
-      });
+        const res = await fetch(`https://api.cloudinary.com/v1_1/ram21zim/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
 
-      const data = await res.json();
-      uploadedImages.push(data.secure_url);
+        if (!res.ok) throw new Error('Upload failed');
+        const data = await res.json();
+        uploadedImages.push(data.secure_url);
+      }
+
+      setFields((prevFields) => ({
+        ...prevFields,
+        images: uploadedImages,
+      }));
+    } catch (error) {
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
     }
-
-    setFields((prevFields) => ({
-      ...prevFields,
-      images: uploadedImages,
-    }));
   };
 // const handleImageChange = async (e) => {
 //   const files = Array.from(e.target.files);
@@ -783,21 +794,16 @@ const handleSubmit = async (e) => {
             onChange={handleImageChange}
             required
           />
+          {uploading && (
+            <div className='mt-2'>
+              <p className='text-sm text-blue-600'>Uploading images...</p>
+            </div>
+          )}
           {fields.images.length > 0 && (
             <div className='mt-2'>
-              <p className='text-sm text-gray-600'>
-                {fields.images.length} image(s) selected
-                {fields.images.length > 50 && (
-                  <span className='text-red-500 ml-2'>⚠️ Maximum 50 images recommended</span>
-                )}
+              <p className='text-sm text-green-600'>
+                {fields.images.length} image(s) uploaded successfully
               </p>
-              <div className='mt-2 max-h-32 overflow-y-auto'>
-                {fields.images.map((image, index) => (
-                  <div key={index} className='text-xs text-gray-500 truncate'>
-                    {index + 1}. {image.name}
-                  </div>
-                ))}
-              </div>
             </div>
           )}
         </div> 
@@ -809,6 +815,7 @@ const handleSubmit = async (e) => {
             onMouseEnter={(e) => e.target.style.backgroundColor = '#660066'}
             onMouseLeave={(e) => e.target.style.backgroundColor = '#800080'}
             type='submit'
+            disabled={uploading}
           >
             Add Property
           </button>
