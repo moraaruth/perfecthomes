@@ -227,10 +227,9 @@ const PropertyEditForm = () => {
             value={fields?.type || ''}
             onChange={handleChange}
           >
+            <option value=''>Select Property Type</option>
             <option value='Apartment'>Apartment</option>
-            <option value='Condo'>Condo</option>
             <option value='House'>House</option>
-            <option value='Cabin Or Cottage'>Cabin or Cottage</option>
             <option value='Room'>Room</option>
             <option value='Studio'>Studio</option>
             <option value='Other'>Other</option>
@@ -684,7 +683,7 @@ const PropertyEditForm = () => {
             htmlFor='images'
             className='block text-gray-700 font-bold mb-2'
           >
-            Add New Images
+            Images (Select up to 50 images)
           </label>
           <input
             type='file'
@@ -701,6 +700,16 @@ const PropertyEditForm = () => {
               <div className='w-full bg-gray-200 rounded-full h-2'>
                 <div className='bg-blue-600 h-2 rounded-full transition-all duration-300' style={{width: `${uploadProgress}%`}}></div>
               </div>
+            </div>
+          )}
+          {fields.images && fields.images.length > 0 && (
+            <div className='mt-2'>
+              <p className='text-sm text-green-600'>
+                {fields.images.length} image(s) uploaded successfully
+                {fields.images.length > 50 && (
+                  <span className='text-red-500 ml-2'>⚠️ Maximum 50 images recommended</span>
+                )}
+              </p>
             </div>
           )}
         </div>
