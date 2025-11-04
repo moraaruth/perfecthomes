@@ -653,7 +653,7 @@ const PropertyEditForm = () => {
         </div>
 
         <div className='mb-4'>
-          {fields.images && fields.images.length > 0 ? (
+          {/* {fields.images && fields.images.length > 0 ? (
             <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
               {fields.images.map((image, index) => (
                 <div key={index} className='relative'>
@@ -674,7 +674,7 @@ const PropertyEditForm = () => {
             </div>
           ) : (
             <p className='text-gray-500 mb-4'>No images uploaded</p>
-          )}
+          )} */}
           
           <label
             htmlFor='images'
