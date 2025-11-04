@@ -653,16 +653,13 @@ const PropertyEditForm = () => {
         </div>
 
         <div className='mb-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
-            Current Images
-          </label>
           {fields.images && fields.images.length > 0 ? (
             <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
               {fields.images.map((image, index) => (
                 <div key={index} className='relative'>
                   <img
                     src={image.url || image}
-                    alt={`Property Image ${index + 1}`}
+                    alt="Property Image"
                     className='w-full h-32 object-cover rounded'
                   />
                   <button
