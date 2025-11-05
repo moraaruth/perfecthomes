@@ -18,18 +18,18 @@ const InfoBoxes = () => {
                 </InfoBox>
 
                 <InfoBox
-                    heading='For Property Owners'
+                    heading='Premium Services'
                     backgroundColor=""
                     textColor="text-gray-800"
                     buttonInfo={{
-                        text: 'Add Properties',
-                        link: '/properties/add',
+                        text: 'Book a Viewing',
+                        link: '/book-view',
                         backgroundColor: '#800080'
                     }}
                     customStyle={{ backgroundColor: '#E6B3E6' }}
                 >
-                    List your properties and reach potential tenants. Rent as an
-                    airbnb or long term.
+                    Schedule personalized property tours and get expert guidance
+                    from our professional team.
                 </InfoBox>
 
                
