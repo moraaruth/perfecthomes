@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { FaMapMarkerAlt, FaPhone, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaTiktok } from 'react-icons/fa'
+import { FaMapMarkerAlt, FaPhone, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaTiktok, FaWhatsapp } from 'react-icons/fa'
 import emailjs from '@emailjs/browser'
 
 const ContactPage = () => {
@@ -102,23 +102,20 @@ const ContactPage = () => {
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Follow us on:</h3>
               <div className="flex space-x-4">
-                <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
+                <a href="https://www.facebook.com/share/14NMtbUgq4a/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
                   <FaFacebook className="text-xl" style={{ color: '#800080' }} />
                 </a>
-                <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
-                  <FaTwitter className="text-xl" style={{ color: '#800080' }} />
+                <a href="https://wa.me/message/3PCINZDAGWVIH1" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
+                  <FaWhatsapp className="text-xl" style={{ color: '#800080' }} />
                 </a>
-                <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
+                <a href="https://www.instagram.com/kenya_perfect_homes?igsh=dG9wZWF3NnF1ajZj&utm_source=qr" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
                   <FaInstagram className="text-xl" style={{ color: '#800080' }} />
                 </a>
-                <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
-                  <FaLinkedin className="text-xl" style={{ color: '#800080' }} />
+                <a href="https://www.tiktok.com/@perfecthomes_1?_t=ZM-90dzr7MlxZA&_r=1" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
+                  <FaTiktok className="text-xl" style={{ color: '#800080' }} />
                 </a>
                 <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
                   <FaYoutube className="text-xl" style={{ color: '#800080' }} />
-                </a>
-                <a href="#" className="p-3 rounded-full transition-colors" style={{ backgroundColor: '#E6B3E6' }}>
-                  <FaTiktok className="text-xl" style={{ color: '#800080' }} />
                 </a>
               </div>
             </div>
