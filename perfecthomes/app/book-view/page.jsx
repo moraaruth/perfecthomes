@@ -21,12 +21,12 @@ const BookViewPage = () => {
   const [message, setMessage] = useState('')
 
   const locations = [
-    'Westland', 'Karen', 'Kilimani', 'Lavington', 'Kileleshwa', 
+    'Westlands', 'Karen', 'Kilimani', 'Lavington', 'Kileleshwa', 
     'Runda', 'Muthaiga', 'Spring Valley', 'Riverside', 'Parklands'
   ]
 
   const houseTypes = [
-    'Apartment', 'House', 'Studio', 'Room', 'Loft', 'Other'
+    'Apartment', 'House', 'Studio', 'Room', 'Other'
   ]
 
   const handleChange = (e) => {
