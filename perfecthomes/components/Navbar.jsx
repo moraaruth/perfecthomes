@@ -96,7 +96,7 @@ const Navbar = () => {
               />
 
               <span className="hidden md:block text-2xl font-bold ml-2" style={{ color: '#800080' }}>
-                Perfect Home
+                Perfect Homes
               </span>
             </Link>
             {/* <!-- Desktop Menu Hidden below md screens --> */}
