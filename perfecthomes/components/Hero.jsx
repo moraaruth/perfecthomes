@@ -1,12 +1,13 @@
 'use client'
 import PropertySearchForm from './PropertySearchForm'
 import { useState, useEffect } from 'react'
-import c2Image from '@/assets/images/c2.jpg'
-import c3Image from '@/assets/images/c3.jpg'
-import c4Image from '@/assets/images/c4.jpg'
 
 const Hero = () => {
-  const images = [c2Image, c3Image, c4Image, c2Image]
+  const images = [
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2075&q=80',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+  ]
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Hero = () => {
     <section
       className="h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center transition-all duration-1000"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${images[currentImageIndex].src})`
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${images[currentImageIndex]})`
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
