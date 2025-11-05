@@ -142,10 +142,15 @@ export const PUT = async (request, { params }) => {
     // Parse JSON body instead of formData
     const body = await request.json();
 
+    // Only allow admins to edit any property
+    const adminEmails = ['mnjosiah@gmail.com', 'iammoraaruth@gmail.com'];
+    if (!adminEmails.includes(sessionUser.user.email)) {
+      return new Response('Unauthorized - Admin access required', { status: 403 });
+    }
+
     // Get property to update
     const existingProperty = await Property.findById(id);
     if (!existingProperty) return new Response('Property does not exist', { status: 404 });
-    if (existingProperty.owner.toString() !== userId) return new Response('Unauthorized', { status: 401 });
 
     const propertyData = {
       type: body.type,
