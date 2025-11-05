@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 
 const Hero = () => {
   const images = [
-    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80',
+    'https://images.unsplash.com/photo-1544984243-ec57ea16fe25?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2058&q=80',
-    'https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80'
   ]
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
@@ -26,12 +26,11 @@ const Hero = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         <div className="bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl p-8 mb-8">
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-2xl mb-4">
-            Your Dream Home
-            <span className="block text-purple-300">Awaits in Kenya</span>
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-2xl">
+            Find The Perfect Home
           </h1>
-          <p className="text-xl text-gray-100 drop-shadow-lg font-medium">
-            Luxury properties • Prime locations • Exceptional living
+          <p className="my-6 text-xl text-white drop-shadow-lg">
+            Discover the perfect property that suits your needs.
           </p>
         </div>
 
