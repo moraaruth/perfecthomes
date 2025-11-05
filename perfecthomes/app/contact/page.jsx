@@ -82,7 +82,7 @@ const ContactPage = () => {
                 <FaMapMarkerAlt className="text-2xl mr-4" style={{ color: '#800080' }} />
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800">Location</h3>
-                  <p className="text-gray-600">Westland, Nairobi, Kenya</p>
+                  <p className="text-gray-600">Westlands, Nairobi, Kenya</p>
                 </div>
               </div>
             </div>

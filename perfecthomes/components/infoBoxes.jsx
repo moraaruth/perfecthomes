@@ -13,8 +13,8 @@ const InfoBoxes = () => {
                         backgroundColor: '#800080'
                     }}
                 >
-                    Find your dream rental property. Bookmark properties and contact
-                    owners.
+                    Explore premium properties across Kenya. Connect directly with
+                    property managers for seamless rentals.
                 </InfoBox>
 
                 <InfoBox

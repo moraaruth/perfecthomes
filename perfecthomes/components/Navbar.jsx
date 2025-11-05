@@ -14,7 +14,7 @@ const Navbar = () => {
   const profileImage = session?.user?.image
   
   // Admin emails list
-  const adminEmails = ['mnjosiah@gmail.com', 'iammoraaruth@gmail.com'] 
+  const adminEmails = ['phomeskenya@gmail.com', 'iammoraaruth@gmail.com'] 
   const isAdmin = session?.user?.email && adminEmails.includes(session.user.email)
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

@@ -95,11 +95,11 @@ const Footer = () => {
               </div>
               <div className="flex items-center">
                 <FaEnvelope className="mr-3 text-purple-200" />
-                <span className="text-purple-100">mnjosiah@gmail.com</span>
+                <span className="text-purple-100">phomeskenya@gmail.com</span>
               </div>
               <div className="flex items-center">
                 <FaMapMarkerAlt className="mr-3 text-purple-200" />
-                <span className="text-purple-100">Westland, Nairobi</span>
+                <span className="text-purple-100">Westlands, Nairobi</span>
               </div>
             </div>
           </div>
