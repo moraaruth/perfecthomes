@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { fetchProperty } from '@/utils/requests';
+// import { fetchProperty } from '@/utils/requests';
 
 const PropertyEditForm = () => {
   const { id } = useParams();
@@ -17,7 +17,8 @@ const PropertyEditForm = () => {
   useEffect(() => {
     const fetchPropertyData = async () => {
       try {
-        const propertyData = await fetchProperty(id);
+        const res = await fetch(`/api/properties/${id}`);
+        const propertyData = await res.json();
         setProperty(propertyData);
       } catch (error) {
         console.error(error);
