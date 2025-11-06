@@ -8,718 +8,203 @@ const PropertyEditForm = () => {
   const { id } = useParams();
   const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
-  const [fields, setFields] = useState({
-    type: '',
-    name: '',
-    description: '',
-    location: {
-      street: '',
-      city: '',
-      
-    },
-    beds: '',
-    baths: '',
-    square_feet: '',
-    amenities: [],
-    rates: {
-      weekly: '',
-      monthly: '',
-      daily: '',
-    },
-    seller_info: {
-      name: '',
-      email: '',
-      phone: '',
-    },
-    images: [],
-  });
+  const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editingField, setEditingField] = useState(null);
+  const [tempValue, setTempValue] = useState('');
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
-    setMounted(true);
-
-    // Fetch property data for form
     const fetchPropertyData = async () => {
       try {
         const propertyData = await fetchProperty(id);
-
-        // Check rates for null, if so then make empty string
-        if (propertyData && propertyData.rates) {
-          const defaultRates = { ...propertyData.rates };
-          for (const rate in defaultRates) {
-            if (defaultRates[rate] === null) {
-              defaultRates[rate] = '';
-            }
-          }
-          propertyData.rates = defaultRates;
-        }
-
-        setFields({
-          ...propertyData,
-          amenities: propertyData?.amenities || [],
-          images: propertyData?.images || [],
-          location: propertyData?.location || { street: '', city: '' },
-          rates: propertyData?.rates || { weekly: '', monthly: '', daily: '', sale: '' },
-          seller_info: propertyData?.seller_info || { name: '', email: '', phone: '' }
-        });
+        setProperty(propertyData);
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchPropertyData();
-  }, []);
+  }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const updateProperty = async (field, value) => {
+    try {
+      const updatedProperty = { ...property, [field]: value };
+      
+      const res = await fetch(`/api/properties/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProperty),
+      });
 
-    // Check if nested property
-    if (name.includes('.')) {
-      const [outerKey, innerKey] = name.split('.');
-
-      setFields((prevFields) => ({
-        ...prevFields,
-        [outerKey]: {
-          ...prevFields[outerKey],
-          [innerKey]: value,
-        },
-      }));
-    } else {
-      // Not nested
-      setFields((prevFields) => ({
-        ...prevFields,
-        [name]: value,
-      }));
+      if (res.ok) {
+        setProperty(updatedProperty);
+        toast.success(`${field} updated successfully`);
+      } else {
+        toast.error('Update failed');
+      }
+    } catch (error) {
+      toast.error('Update failed');
     }
   };
-  const handleImageChange = async (e) => {
+
+  const updateNestedProperty = async (parentField, childField, value) => {
+    try {
+      const updatedProperty = { 
+        ...property, 
+        [parentField]: { ...property[parentField], [childField]: value }
+      };
+      
+      const res = await fetch(`/api/properties/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProperty),
+      });
+
+      if (res.ok) {
+        setProperty(updatedProperty);
+        toast.success(`${childField} updated successfully`);
+      } else {
+        toast.error('Update failed');
+      }
+    } catch (error) {
+      toast.error('Update failed');
+    }
+  };
+
+  const handleEdit = (field, currentValue) => {
+    setEditingField(field);
+    setTempValue(currentValue || '');
+  };
+
+  const handleSave = (field) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.');
+      updateNestedProperty(parent, child, tempValue);
+    } else {
+      updateProperty(field, tempValue);
+    }
+    setEditingField(null);
+  };
+
+  const handleCancel = () => {
+    setEditingField(null);
+    setTempValue('');
+  };
+
+  const removeImage = async (indexToRemove) => {
+    const updatedImages = property.images.filter((_, index) => index !== indexToRemove);
+    await updateProperty('images', updatedImages);
+  };
+
+  const addImages = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setUploading(true);
-    setUploadProgress(0);
-
     try {
-      const uploadPromises = files.map(async (file, index) => {
+      const uploadPromises = files.map(async (file) => {
         const formData = new FormData();
         formData.append('file', file);
-
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!res.ok) throw new Error(`Upload failed for image ${index + 1}`);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
         const data = await res.json();
-        
-        setUploadProgress(prev => prev + (100 / files.length));
         return data.secure_url;
       });
 
       const uploadedImages = await Promise.all(uploadPromises);
-
-      setFields((prevFields) => ({
-        ...prevFields,
-        images: [...prevFields.images, ...uploadedImages],
-      }));
+      const updatedImages = [...property.images, ...uploadedImages];
+      await updateProperty('images', updatedImages);
     } catch (error) {
-      console.error('Upload error:', error);
-      alert('Some images failed to upload. Please try again.');
+      toast.error('Image upload failed');
     } finally {
       setUploading(false);
-      setUploadProgress(0);
     }
   };
 
-  const removeImage = (indexToRemove) => {
-    setFields((prevFields) => ({
-      ...prevFields,
-      images: prevFields.images.filter((_, index) => index !== indexToRemove),
-    }));
-  };
+  const EditableField = ({ label, field, value, type = 'text' }) => (
+    <div className='mb-4 p-4 border rounded-lg'>
+      <label className='block text-gray-700 font-bold mb-2'>{label}</label>
+      {editingField === field ? (
+        <div className='flex gap-2'>
+          <input
+            type={type}
+            value={tempValue}
+            onChange={(e) => setTempValue(e.target.value)}
+            className='border rounded px-3 py-2 flex-1'
+          />
+          <button onClick={() => handleSave(field)} className='bg-green-500 text-white px-3 py-2 rounded'>Save</button>
+          <button onClick={handleCancel} className='bg-gray-500 text-white px-3 py-2 rounded'>Cancel</button>
+        </div>
+      ) : (
+        <div className='flex justify-between items-center'>
+          <span className='text-lg'>{value || 'Not set'}</span>
+          <button onClick={() => handleEdit(field, value)} className='bg-blue-500 text-white px-3 py-2 rounded'>Edit</button>
+        </div>
+      )}
+    </div>
+  );
 
-  const handleAmenitiesChange = (e) => {
-    const { value, checked } = e.target;
-
-    // Clone the current array or create empty array if null
-    const updatedAmenites = [...(fields?.amenities || [])];
-
-    if (checked) {
-      // Add value to array
-      updatedAmenites.push(value);
-    } else {
-      // Remove value from array
-      const index = updatedAmenites.indexOf(value);
-
-      if (index !== -1) {
-        updatedAmenites.splice(index, 1);
-      }
-    }
-
-    // Update state with updated array
-    setFields((prevFields) => ({
-      ...prevFields,
-      amenities: updatedAmenites,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const propertyData = {
-        type: fields.type,
-        name: fields.name,
-        description: fields.description,
-        location: fields.location,
-        beds: fields.beds,
-        baths: fields.baths,
-        square_feet: fields.square_feet,
-        amenities: fields.amenities,
-        rates: fields.rates,
-        seller_info: fields.seller_info,
-        images: fields.images,
-      };
-
-      const res = await fetch(`/api/properties/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(propertyData),
-      });
-
-      if (res.status === 200) {
-        router.push(`/properties/${id}`);
-      } else if (res.status === 401 || res.status === 403) {
-        toast.error('Permission denied');
-      } else {
-        toast.error('Something went wrong');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
-    }
-  };
-
-  if (!mounted || loading || !fields) {
-    return <div>Loading...</div>;
-  }
+  if (loading || !property) return <div>Loading...</div>;
 
   return (
-      <form onSubmit={handleSubmit}>
-        <h2 className='text-3xl text-center font-semibold mb-6'>
-          Edit Property
-        </h2>
+    <div className='max-w-4xl mx-auto p-6'>
+      <h2 className='text-3xl font-bold mb-6'>Edit Property</h2>
 
-        <div className='mb-4'>
-          <label htmlFor='type' className='block text-gray-700 font-bold mb-2'>
-            Property Type
-          </label>
-          <select
-            id='type'
-            name='type'
-            className='border rounded w-full py-2 px-3'
-            required
-            value={fields?.type || ''}
-            onChange={handleChange}
-          >
-            <option value=''>Select Property Type</option>
-            <option value='Apartment'>Apartment</option>
-            <option value='House'>House</option>
-            <option value='Room'>Room</option>
-            <option value='Studio'>Studio</option>
-            <option value='Other'>Other</option>
-          </select>
-        </div>
-        <div className='mb-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
-            Listing Name
-          </label>
-          <input
-            type='text'
-            id='name'
-            name='name'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='eg. Beautiful Apartment In Nairobi'
-            required
-            value={fields?.name || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='description'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Description
-          </label>
-          <textarea
-            id='description'
-            name='description'
-            className='border rounded w-full py-2 px-3'
-            rows='4'
-            placeholder='Add an optional description of your property'
-            value={fields?.description || ''}
-            onChange={handleChange}
-          ></textarea>
-        </div>
+      <EditableField label="Property Type" field="type" value={property.type} />
+      <EditableField label="Property Name" field="name" value={property.name} />
+      <EditableField label="Description" field="description" value={property.description} />
+      
+      <EditableField label="Street" field="location.street" value={property.location?.street} />
+      <EditableField label="City" field="location.city" value={property.location?.city} />
+      
+      <EditableField label="Beds" field="beds" value={property.beds} type="number" />
+      <EditableField label="Baths" field="baths" value={property.baths} type="number" />
+      <EditableField label="Square Feet" field="square_feet" value={property.square_feet} type="number" />
+      
+      <EditableField label="Sale Price" field="rates.sale" value={property.rates?.sale} type="number" />
+      <EditableField label="Weekly Rate" field="rates.weekly" value={property.rates?.weekly} type="number" />
+      <EditableField label="Monthly Rate" field="rates.monthly" value={property.rates?.monthly} type="number" />
+      
+      <EditableField label="Seller Name" field="seller_info.name" value={property.seller_info?.name} />
+      <EditableField label="Seller Email" field="seller_info.email" value={property.seller_info?.email} />
+      <EditableField label="Seller Phone" field="seller_info.phone" value={property.seller_info?.phone} />
 
-        <div className='mb-4 bg-blue-50 p-4'>
-          <label className='block text-gray-700 font-bold mb-2'>Location</label>
-          <input
-            type='text'
-            id='street'
-            name='location.street'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='Street'
-            value={fields?.location?.street || ''}
-            onChange={handleChange}
-          />
-          <input
-            type='text'
-            id='city'
-            name='location.city'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='City'
-            required
-            value={fields?.location?.city || ''}
-            onChange={handleChange}
-          />
-        
-         
+      {/* Images Section */}
+      <div className='mb-4 p-4 border rounded-lg'>
+        <label className='block text-gray-700 font-bold mb-2'>Images</label>
+        <div className='grid grid-cols-3 gap-4 mb-4'>
+          {property.images?.map((image, index) => (
+            <div key={index} className='relative'>
+              <img src={image.url || image} alt={`Image ${index + 1}`} className='w-full h-32 object-cover rounded' />
+              <button
+                onClick={() => removeImage(index)}
+                className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-sm'
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
+        <input
+          type='file'
+          multiple
+          accept='image/*'
+          onChange={addImages}
+          className='border rounded w-full py-2 px-3'
+          disabled={uploading}
+        />
+        {uploading && <p className='text-blue-600 mt-2'>Uploading...</p>}
+      </div>
 
-        <div className='mb-4 flex flex-wrap'>
-          <div className='w-full sm:w-1/3 pr-2'>
-            <label
-              htmlFor='beds'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Beds
-            </label>
-            <input
-              type='number'
-              id='beds'
-              name='beds'
-              className='border rounded w-full py-2 px-3'
-              required
-              value={fields?.beds || ''}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='w-full sm:w-1/3 px-2'>
-            <label
-              htmlFor='baths'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Baths
-            </label>
-            <input
-              type='number'
-              id='baths'
-              name='baths'
-              className='border rounded w-full py-2 px-3'
-              required
-              value={fields?.baths || ''}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='w-full sm:w-1/3 pl-2'>
-            <label
-              htmlFor='square_feet'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Square Feet
-            </label>
-            <input
-              type='number'
-              id='square_feet'
-              name='square_feet'
-              className='border rounded w-full py-2 px-3'
-              required
-              value={fields?.square_feet || ''}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className='mb-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
-            Amenities
-          </label>
-          <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_wifi'
-                name='amenities'
-                value='Wifi'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Wifi') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_wifi'>Wifi</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_kitchen'
-                name='amenities'
-                value='Full Kitchen'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Full Kitchen') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_kitchen'>Full kitchen</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_washer_dryer'
-                name='amenities'
-                value='Washer & Dryer'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Washer & Dryer') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_washer_dryer'>Washer & Dryer</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_free_parking'
-                name='amenities'
-                value='Free Parking'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Free Parking') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_free_parking'>Free Parking</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_pool'
-                name='amenities'
-                value='Swimming Pool'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Swimming Pool') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_pool'>Swimming Pool</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_hot_tub'
-                name='amenities'
-                value='Hot Tub'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Hot Tub') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_hot_tub'>Hot Tub</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_24_7_security'
-                name='amenities'
-                value='24/7 Security'
-                className='mr-2'
-                checked={fields?.amenities?.includes('24/7 Security') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_24_7_security'>24/7 Security</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_wheelchair_accessible'
-                name='amenities'
-                value='Wheelchair Accessible'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Wheelchair Accessible') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_wheelchair_accessible'>
-                Wheelchair Accessible
-              </label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_elevator_access'
-                name='amenities'
-                value='Elevator Access'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Elevator Access') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_elevator_access'>Elevator Access</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_dishwasher'
-                name='amenities'
-                value='Dishwasher'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Dishwasher') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_dishwasher'>Dishwasher</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_gym_fitness_center'
-                name='amenities'
-                value='Gym/Fitness Center'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Gym/Fitness Center') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_gym_fitness_center'>
-                Gym/Fitness Center
-              </label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_air_conditioning'
-                name='amenities'
-                value='Air Conditioning'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Air Conditioning') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_air_conditioning'>Air Conditioning</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_balcony_patio'
-                name='amenities'
-                value='Balcony/Patio'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Balcony/Patio') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_balcony_patio'>Balcony/Patio</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_smart_tv'
-                name='amenities'
-                value='Smart TV'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Smart TV') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_smart_tv'>Smart TV</label>
-            </div>
-            <div>
-              <input
-                type='checkbox'
-                id='amenity_coffee_maker'
-                name='amenities'
-                value='Coffee Maker'
-                className='mr-2'
-                checked={fields?.amenities?.includes('Coffee Maker') || false}
-                onChange={handleAmenitiesChange}
-              />
-              <label htmlFor='amenity_coffee_maker'>Coffee Maker</label>
-            </div>
-          </div>
-        </div>
-
-        <div className='mb-4 bg-blue-50 p-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
-            Rates (Leave blank if not applicable)
-          </label>
-          <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4'>
-            <div className='flex items-center'>
-              <label htmlFor='weekly_rate' className='mr-2'>
-                Weekly
-              </label>
-              <input
-                type='number'
-                id='weekly_rate'
-                name='rates.weekly'
-                className='border rounded w-full py-2 px-3'
-                value={fields?.rates?.weekly || ''}
-                onChange={handleChange}
-              />
-            </div>
-            <div className='flex items-center'>
-              <label htmlFor='sale_rate' className='mr-2'>
-                Sale
-              </label>
-              <input
-                type='number'
-                id='sale_rate'
-                name='rates.sale'
-                className='border rounded w-full py-2 px-3'
-                value={fields?.rates?.sale || ''}
-                onChange={handleChange}
-              />
-            </div>
-            <div className='flex items-center'>
-              <label htmlFor='monthly_rate' className='mr-2'>
-                Monthly
-              </label>
-              <input
-                type='number'
-                id='monthly_rate'
-                name='rates.monthly'
-                className='border rounded w-full py-2 px-3'
-                value={fields?.rates?.monthly || ''}
-                onChange={handleChange}
-              />
-            </div>
-            {/* <div className='flex items-center'>
-              <label htmlFor='daily_rate' className='mr-2'>
-                Daily
-              </label>
-              <input
-                type='number'
-                id='daily_rate'
-                name='rates.daily'
-                className='border rounded w-full py-2 px-3'
-                value={fields.rates.daily}
-                onChange={handleChange}
-              />
-            </div> */}
-          </div>
-        </div>
-
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_name'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Name
-          </label>
-          <input
-            type='text'
-            id='seller_name'
-            name='seller_info.name'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Name'
-            value={fields?.seller_info?.name || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_email'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Email
-          </label>
-          <input
-            type='email'
-            id='seller_email'
-            name='seller_info.email'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Email address'
-            required
-            value={fields?.seller_info?.email || ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_phone'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Phone
-          </label>
-          <input
-            type='tel'
-            id='seller_phone'
-            name='seller_info.phone'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Phone'
-            value={fields?.seller_info?.phone || ''}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className='mb-4'>
-          {/* {fields.images && fields.images.length > 0 ? (
-            <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
-              {fields.images.map((image, index) => (
-                <div key={index} className='relative'>
-                  <img
-                    src={image.url || image}
-                    alt="Property Image"
-                    className='w-full h-32 object-cover rounded'
-                  />
-                  <button
-                    type='button'
-                    onClick={() => removeImage(index)}
-                    className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600'
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className='text-gray-500 mb-4'>No images uploaded</p>
-          )} */}
-          
-          <label
-            htmlFor='images'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Images (Select up to 50 images)
-          </label>
-          <input
-            type='file'
-            id='images'
-            name='images'
-            className='border rounded w-full py-2 px-3'
-            accept='image/*'
-            multiple
-            onChange={handleImageChange}
-          />
-          {uploading && (
-            <div className='mt-2'>
-              <p className='text-sm text-blue-600'>Uploading images... {Math.round(uploadProgress)}%</p>
-              <div className='w-full bg-gray-200 rounded-full h-2'>
-                <div className='bg-blue-600 h-2 rounded-full transition-all duration-300' style={{width: `${uploadProgress}%`}}></div>
-              </div>
-            </div>
-          )}
-          {fields.images && fields.images.length > 0 && (
-            <div className='mt-2'>
-              <p className='text-sm text-green-600'>
-                {fields.images.length} image(s) uploaded successfully
-                {fields.images.length > 50 && (
-                  <span className='text-red-500 ml-2'>⚠️ Maximum 50 images recommended</span>
-                )}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div>
-          <button
-            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
-            type='submit'
-          >
-            Update Property
-          </button>
-        </div>
-      </form>
+      <button
+        onClick={() => router.push(`/properties/${id}`)}
+        className='bg-purple-600 text-white px-6 py-3 rounded-lg'
+      >
+        Back to Property
+      </button>
+    </div>
   );
 };
+
 export default PropertyEditForm;
