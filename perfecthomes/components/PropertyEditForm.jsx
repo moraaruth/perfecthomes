@@ -100,6 +100,13 @@ const PropertyEditForm = () => {
     await updateProperty('images', updatedImages);
   };
 
+  const moveImageToFirst = async (indexToMove) => {
+    const updatedImages = [...property.images];
+    const [imageToMove] = updatedImages.splice(indexToMove, 1);
+    updatedImages.unshift(imageToMove);
+    await updateProperty('images', updatedImages);
+  };
+
   const addImages = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -231,6 +238,11 @@ const PropertyEditForm = () => {
                 return (
                   <div key={index} className='relative group'>
                     <div className='relative w-full h-48 rounded-lg overflow-hidden bg-gray-200'>
+                      {index === 0 && (
+                        <div className='absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold z-10'>
+                          MAIN
+                        </div>
+                      )}
                       <Image
                         src={imageUrl}
                         alt={`Property image ${index + 1}`}
@@ -238,12 +250,24 @@ const PropertyEditForm = () => {
                         className='object-cover group-hover:scale-105 transition-transform duration-200'
                         sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
                       />
-                      <button
-                        onClick={() => removeImage(index)}
-                        className='absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'
-                      >
-                        <FaTrash size={12} />
-                      </button>
+                      <div className='absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+                        {index !== 0 && (
+                          <button
+                            onClick={() => moveImageToFirst(index)}
+                            className='bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center'
+                            title='Make first image'
+                          >
+                            ⭐
+                          </button>
+                        )}
+                        <button
+                          onClick={() => removeImage(index)}
+                          className='bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center'
+                          title='Delete image'
+                        >
+                          <FaTrash size={12} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
