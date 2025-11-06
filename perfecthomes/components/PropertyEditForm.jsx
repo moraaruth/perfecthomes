@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-// import { fetchProperty } from '@/utils/requests';
+import Image from 'next/image';
+import { FaEdit, FaSave, FaTimes, FaTrash, FaPlus } from 'react-icons/fa';
 
 const PropertyEditForm = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const PropertyEditForm = () => {
 
       if (res.ok) {
         setProperty(updatedProperty);
-        toast.success(`${field} updated successfully`);
+        toast.success(`Updated successfully`);
       } else {
         toast.error('Update failed');
       }
@@ -65,7 +66,7 @@ const PropertyEditForm = () => {
 
       if (res.ok) {
         setProperty(updatedProperty);
-        toast.success(`${childField} updated successfully`);
+        toast.success(`Updated successfully`);
       } else {
         toast.error('Update failed');
       }
@@ -124,102 +125,148 @@ const PropertyEditForm = () => {
   };
 
   const EditableField = ({ label, field, value, type = 'text' }) => (
-    <div className='mb-4 p-4 border rounded-lg'>
-      <label className='block text-gray-700 font-bold mb-2'>{label}</label>
+    <div className='bg-white p-6 rounded-lg shadow-md mb-6'>
+      <div className='flex justify-between items-center mb-3'>
+        <h3 className='text-lg font-semibold text-gray-800'>{label}</h3>
+        {editingField !== field && (
+          <button 
+            onClick={() => handleEdit(field, value)} 
+            className='flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors'
+          >
+            <FaEdit /> Edit
+          </button>
+        )}
+      </div>
+      
       {editingField === field ? (
-        <div className='flex gap-2'>
+        <div className='space-y-3'>
           <input
             type={type}
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
-            className='border rounded px-3 py-2 flex-1'
+            className='w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            placeholder={`Enter ${label.toLowerCase()}`}
           />
-          <button onClick={() => handleSave(field)} className='bg-green-500 text-white px-3 py-2 rounded'>Save</button>
-          <button onClick={handleCancel} className='bg-gray-500 text-white px-3 py-2 rounded'>Cancel</button>
+          <div className='flex gap-3'>
+            <button 
+              onClick={() => handleSave(field)} 
+              className='flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors'
+            >
+              <FaSave /> Save
+            </button>
+            <button 
+              onClick={handleCancel} 
+              className='flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors'
+            >
+              <FaTimes /> Cancel
+            </button>
+          </div>
         </div>
       ) : (
-        <div className='flex justify-between items-center'>
-          <span className='text-lg'>{value || 'Not set'}</span>
-          <button onClick={() => handleEdit(field, value)} className='bg-blue-500 text-white px-3 py-2 rounded'>Edit</button>
+        <div className='text-xl text-gray-700 bg-gray-50 p-4 rounded-lg'>
+          {value || <span className='text-gray-400 italic'>Not set</span>}
         </div>
       )}
     </div>
   );
 
-  if (loading || !property) return <div>Loading...</div>;
+  if (loading || !property) return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <div className='text-xl text-gray-600'>Loading...</div>
+    </div>
+  );
 
   return (
-    <div className='max-w-4xl mx-auto p-6'>
-      <h2 className='text-3xl font-bold mb-6'>Edit Property</h2>
+    <div className='min-h-screen bg-gray-50 py-8'>
+      <div className='max-w-4xl mx-auto px-6'>
+        <div className='bg-white rounded-lg shadow-lg p-8 mb-8'>
+          <h1 className='text-4xl font-bold text-gray-800 mb-2'>Edit Property</h1>
+          <p className='text-gray-600 mb-8'>Click edit on any field to modify it individually</p>
+        </div>
 
-      <EditableField label="Property Type" field="type" value={property.type} />
-      <EditableField label="Property Name" field="name" value={property.name} />
-      <EditableField label="Description" field="description" value={property.description} />
-      
-      <EditableField label="Street" field="location.street" value={property.location?.street} />
-      <EditableField label="City" field="location.city" value={property.location?.city} />
-      
-      <EditableField label="Beds" field="beds" value={property.beds} type="number" />
-      <EditableField label="Baths" field="baths" value={property.baths} type="number" />
-      <EditableField label="Square Feet" field="square_feet" value={property.square_feet} type="number" />
-      
-      <EditableField label="Sale Price" field="rates.sale" value={property.rates?.sale} type="number" />
-      <EditableField label="Weekly Rate" field="rates.weekly" value={property.rates?.weekly} type="number" />
-      <EditableField label="Monthly Rate" field="rates.monthly" value={property.rates?.monthly} type="number" />
-      
-      <EditableField label="Seller Name" field="seller_info.name" value={property.seller_info?.name} />
-      <EditableField label="Seller Email" field="seller_info.email" value={property.seller_info?.email} />
-      <EditableField label="Seller Phone" field="seller_info.phone" value={property.seller_info?.phone} />
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          <EditableField label="Property Type" field="type" value={property.type} />
+          <EditableField label="Property Name" field="name" value={property.name} />
+          <EditableField label="Description" field="description" value={property.description} />
+          <EditableField label="Street Address" field="location.street" value={property.location?.street} />
+          <EditableField label="City" field="location.city" value={property.location?.city} />
+          <EditableField label="Bedrooms" field="beds" value={property.beds} type="number" />
+          <EditableField label="Bathrooms" field="baths" value={property.baths} type="number" />
+          <EditableField label="Square Feet" field="square_feet" value={property.square_feet} type="number" />
+          <EditableField label="Sale Price (KSH)" field="rates.sale" value={property.rates?.sale} type="number" />
+          <EditableField label="Weekly Rate (KSH)" field="rates.weekly" value={property.rates?.weekly} type="number" />
+          <EditableField label="Monthly Rate (KSH)" field="rates.monthly" value={property.rates?.monthly} type="number" />
+          <EditableField label="Seller Name" field="seller_info.name" value={property.seller_info?.name} />
+          <EditableField label="Seller Email" field="seller_info.email" value={property.seller_info?.email} />
+          <EditableField label="Seller Phone" field="seller_info.phone" value={property.seller_info?.phone} />
+        </div>
 
-      {/* Images Section */}
-      <div className='mb-4 p-4 border rounded-lg'>
-        <label className='block text-gray-700 font-bold mb-2'>Images</label>
-        {property.images && property.images.length > 0 ? (
-          <div className='grid grid-cols-3 gap-4 mb-4'>
-            {property.images.map((image, index) => {
-              const imageUrl = image?.url || image;
-              console.log('Image URL:', imageUrl); // Debug log
-              return (
-                <div key={index} className='relative'>
-                  <img 
-                    src={imageUrl} 
-                    alt={`Image ${index + 1}`} 
-                    className='w-full h-32 object-cover rounded'
-                    onError={(e) => {
-                      console.error('Image failed to load:', imageUrl);
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                  <button
-                    onClick={() => removeImage(index)}
-                    className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-sm'
-                  >
-                    ×
-                  </button>
-                </div>
-              );
-            })}
+        {/* Images Section */}
+        <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+          <div className='flex justify-between items-center mb-6'>
+            <h3 className='text-2xl font-semibold text-gray-800'>Property Images</h3>
+            <label className='flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors'>
+              <FaPlus /> Add Images
+              <input
+                type='file'
+                multiple
+                accept='image/*'
+                onChange={addImages}
+                className='hidden'
+                disabled={uploading}
+              />
+            </label>
           </div>
-        ) : (
-          <p className='text-gray-500 mb-4'>No images uploaded</p>
-        )}
-        <input
-          type='file'
-          multiple
-          accept='image/*'
-          onChange={addImages}
-          className='border rounded w-full py-2 px-3'
-          disabled={uploading}
-        />
-        {uploading && <p className='text-blue-600 mt-2'>Uploading...</p>}
-      </div>
 
-      <button
-        onClick={() => router.push(`/properties/${id}`)}
-        className='bg-purple-600 text-white px-6 py-3 rounded-lg'
-      >
-        Back to Property
-      </button>
+          {uploading && (
+            <div className='text-center py-4'>
+              <div className='text-blue-600 font-medium'>Uploading images...</div>
+            </div>
+          )}
+
+          {property.images && property.images.length > 0 ? (
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+              {property.images.map((image, index) => {
+                const imageUrl = image?.url || image;
+                return (
+                  <div key={index} className='relative group'>
+                    <div className='relative w-full h-48 rounded-lg overflow-hidden bg-gray-200'>
+                      <Image
+                        src={imageUrl}
+                        alt={`Property image ${index + 1}`}
+                        fill
+                        className='object-cover group-hover:scale-105 transition-transform duration-200'
+                        sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className='absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'
+                      >
+                        <FaTrash size={12} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className='text-center py-12 text-gray-500'>
+              <div className='text-6xl mb-4'>📷</div>
+              <p className='text-xl'>No images uploaded yet</p>
+              <p className='text-sm'>Click "Add Images" to upload property photos</p>
+            </div>
+          )}
+        </div>
+
+        <div className='mt-8 text-center'>
+          <button
+            onClick={() => router.push(`/properties/${id}`)}
+            className='bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors'
+          >
+            Back to Property
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
