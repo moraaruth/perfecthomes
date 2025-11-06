@@ -174,19 +174,35 @@ const PropertyEditForm = () => {
       {/* Images Section */}
       <div className='mb-4 p-4 border rounded-lg'>
         <label className='block text-gray-700 font-bold mb-2'>Images</label>
-        <div className='grid grid-cols-3 gap-4 mb-4'>
-          {property.images?.map((image, index) => (
-            <div key={index} className='relative'>
-              <img src={image.url || image} alt={`Image ${index + 1}`} className='w-full h-32 object-cover rounded' />
-              <button
-                onClick={() => removeImage(index)}
-                className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-sm'
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
+        {property.images && property.images.length > 0 ? (
+          <div className='grid grid-cols-3 gap-4 mb-4'>
+            {property.images.map((image, index) => {
+              const imageUrl = image?.url || image;
+              console.log('Image URL:', imageUrl); // Debug log
+              return (
+                <div key={index} className='relative'>
+                  <img 
+                    src={imageUrl} 
+                    alt={`Image ${index + 1}`} 
+                    className='w-full h-32 object-cover rounded'
+                    onError={(e) => {
+                      console.error('Image failed to load:', imageUrl);
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                  <button
+                    onClick={() => removeImage(index)}
+                    className='absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-sm'
+                  >
+                    ×
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className='text-gray-500 mb-4'>No images uploaded</p>
+        )}
         <input
           type='file'
           multiple
