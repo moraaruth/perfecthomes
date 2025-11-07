@@ -27,10 +27,10 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         <div className="bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl p-8 mb-8">
           <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-2xl">
-            Find The Perfect Home
+            Find Where You Belong
           </h1>
           <p className="my-6 text-xl text-white drop-shadow-lg">
-            Let's find you a perfect home
+            Let's find you a perfect home.
           </p>
         </div>
 
