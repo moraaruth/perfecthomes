@@ -30,7 +30,7 @@ const Hero = () => {
             Find The Perfect Home
           </h1>
           <p className="my-6 text-xl text-white drop-shadow-lg">
-            Discover the perfect property that suits your needs.
+            Let's find you a perfect home
           </p>
         </div>
 
