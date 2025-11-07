@@ -109,13 +109,13 @@ const Footer = () => {
         <div className="border-t border-purple-400 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-purple-200 text-sm">
-              &copy; 2024 Perfect Homes. All rights reserved.
+              &copy; 2025 Perfect Homes. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            {/* <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Privacy Policy</a>
               <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Terms of Service</a>
               <a href="#" className="text-purple-200 hover:text-white text-sm transition-colors">Cookie Policy</a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
