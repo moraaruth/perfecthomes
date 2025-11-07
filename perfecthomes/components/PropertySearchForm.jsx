@@ -54,7 +54,7 @@ const PropertySearchForm = () => {
           <option value='Apartment'>Apartment</option>
           <option value='Studio'>Studio</option>
           <option value='House'>House</option>
-          <option value='Loft'>Loft</option>
+          {/* <option value='Loft'>Loft</option> */}
           <option value='Room'>Room</option>
           <option value='Other'>Other</option>
         </select>
