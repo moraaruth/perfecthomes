@@ -4,17 +4,16 @@ const InfoBoxes = () => {
     return <div> <section>
         <div className="container-xl lg:container m-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
-                <InfoBox
-                    heading='For Renters'
+                 <InfoBox
+                    heading="Properties"
                     backgroundColor="bg-gray-100"
                     buttonInfo={{
-                        text: 'Browse Properties',
-                        link: '/properties',
-                        backgroundColor: '#800080'
+                        text: "Browse Properties",
+                        link: "/properties",
+                        backgroundColor: "#800080"
                     }}
                 >
-                    Explore premium properties across Kenya. Connect directly with
-                    property managers for seamless rentals.
+                    Discover the perfect home to buy. Get in touch with us.
                 </InfoBox>
 
                 <InfoBox
