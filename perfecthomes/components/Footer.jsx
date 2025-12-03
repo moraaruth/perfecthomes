@@ -91,7 +91,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center">
                 <FaPhone className="mr-3 text-purple-200" />
-                <span className="text-purple-100">+254701029158</span>
+                <span className="text-purple-100">0701029158</span>
               </div>
               <div className="flex items-center">
                 <FaEnvelope className="mr-3 text-purple-200" />
