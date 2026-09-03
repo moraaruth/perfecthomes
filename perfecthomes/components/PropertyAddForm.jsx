@@ -109,6 +109,28 @@ const PropertyAddForm = () => {
   //    }));
   //  };
 
+  const convertToJpeg = (file) =>
+    new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            URL.revokeObjectURL(url);
+            resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+          },
+          'image/jpeg',
+          0.85
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -118,8 +140,9 @@ const PropertyAddForm = () => {
 
     try {
       const uploadPromises = files.map(async (file, index) => {
+        const converted = await convertToJpeg(file);
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', converted);
 
         const res = await fetch('/api/upload', {
           method: 'POST',
@@ -795,7 +818,7 @@ const handleSubmit = async (e) => {
             id='images'
             name='images'
             className='border rounded w-full py-2 px-3'
-            accept='image/*'
+            accept='image/jpeg,image/png,image/webp,image/heic,image/heif'
             multiple
             onChange={handleImageChange}
             required
