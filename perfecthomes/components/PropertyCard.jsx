@@ -3,9 +3,15 @@ import Image from 'next/image';
 import logo from '@/assets/images/logo.jpg';
 import Link from 'next/link';
 import {FaBed, FaBath, FaRulerCombined, FaMoneyBill, FaMapMarker } from 'react-icons/fa';
+import { useState } from 'react';
 
 const PropertyCard = ({ property }) => {
+  const [imageError, setImageError] = useState(false);
+  
   if (!property) return null;
+
+  const imageUrl = property.images && property.images.length > 0 ? property.images[0] : null;
+  const displayImage = imageError || !imageUrl ? '/placeholder.jpg' : imageUrl;
 
   const getRateDisplay = () => {
     const { rates } = property;
@@ -14,36 +20,19 @@ const PropertyCard = ({ property }) => {
     }
     return 'N/A';
   }
+  
   return (
     <div className="rounded-xl shadow-md relative">
-
       <Image
-        src={property.images?.[0] || '/placeholder.jpg'}
+        src={displayImage}
         alt={property.name || 'Property'}
         height={0}
         width={0}
         sizes='100vw'
         className='w-full h-auto rounded-t-xl'
+        onError={() => setImageError(true)}
+        unoptimized={imageUrl?.includes('res.cloudinary.com')}
       />
-        {/* {property.images && property.images.length > 0 && (
-              <div className="mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {property.images.map((img, index) => (
-                    <div key={index} className="relative w-full h-64 rounded-lg overflow-hidden">
-                      <Image
-                        src={img.url || img}
-                        alt={property.name || 'Property Image'}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index === 0}
-                        unoptimized // 👈 Add this if Cloudinary URLs cause 400 errors
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )} */}
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
           <div className="text-gray-600">{property.type || 'Property'}</div>
@@ -74,22 +63,10 @@ const PropertyCard = ({ property }) => {
         <div
           className="flex justify-center gap-4 text-green-900 text-sm mb-4"
         >
-          {/* { property.rates.daily && (
-            <p><FaMoneyBill Name='inline mr-2'/> Daily </p>
-
-          )}
-           { property.rates.weekly && (
-            <p><FaMoneyBill className='inline mr-2'/> Weekly </p>
-
-          )} */}
             { property.rates?.sale && (
             <p><FaMoneyBill className='inline mr-2'/> Sale </p>
 
           )}
-           {/* { property.rates.monthly && (
-            <p><FaMoneyBill className='inline mr-2'/> Monthly </p>
-
-          )} */}
           
           
         </div>

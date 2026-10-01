@@ -9,6 +9,8 @@ import {
 } from 'react-icons/fa';
 
 const FeaturedPropertyCard = ({ property }) => {
+  const imageUrl = property.images && property.images.length > 0 ? property.images[0] : null;
+
   const getRateDisplay = () => {
     const { rates } = property;
 
@@ -17,7 +19,7 @@ const FeaturedPropertyCard = ({ property }) => {
     } else if (rates.weekly) {
       return `${rates.weekly.toLocaleString()}/wk`;
     } else if (rates.sale) {
-      return `${rates.sale.toLocaleString()}/wk`;
+      return `${rates.sale.toLocaleString()}/sale`;
     } else if (rates.nightly) {
       return `${rates.nightly.toLocaleString()}/night`;
     }
@@ -25,14 +27,20 @@ const FeaturedPropertyCard = ({ property }) => {
 
   return (
     <div className='bg-white rounded-xl shadow-md relative flex flex-col md:flex-row'>
-      <Image
-        src={property.images[0]}
-        alt=''
-        width={0}
-        height={0}
-        sizes='100vw'
-        className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full md:w-2/5'
-      />
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={property.name || 'Property image'}
+          width={0}
+          height={0}
+          sizes='100vw'
+          className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full md:w-2/5'
+        />
+      ) : (
+        <div className='bg-gray-200 rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full md:w-2/5 h-64 flex items-center justify-center'>
+          <p className='text-gray-500'>No image available</p>
+        </div>
+      )}
       <div className='p-6'>
         <h3 className='text-xl font-bold'>{property.name}</h3>
         <div className='text-gray-600 mb-4'>{property.type}</div>
@@ -68,7 +76,7 @@ const FeaturedPropertyCard = ({ property }) => {
             </p>
           )}
 
-{property.rates.sale && (
+          {property.rates.sale && (
             <p>
               <FaMoneyBill className='inline mr-2' /> Sale
             </p>

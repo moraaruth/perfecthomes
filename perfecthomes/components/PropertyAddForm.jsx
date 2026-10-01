@@ -109,6 +109,21 @@ const PropertyAddForm = () => {
   //    }));
   //  };
 
+  const convertHeicToJpeg = async (file) => {
+    try {
+      // Check if file is HEIC/HEIF
+      if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+        const heic2any = (await import('heic2any')).default;
+        const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg' });
+        return new File([convertedBlob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' });
+      }
+      return file;
+    } catch (error) {
+      console.warn('HEIC conversion failed, will attempt upload as-is:', error);
+      return file;
+    }
+  };
+
   const convertToJpeg = (file) =>
     new Promise((resolve) => {
       const img = new Image();
@@ -131,40 +146,100 @@ const PropertyAddForm = () => {
       img.src = url;
     });
 
+  const validateFile = (file, index) => {
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+    const fileName = file.name.toLowerCase();
+    const isHeic = fileName.endsWith('.heic') || fileName.endsWith('.heif');
+    const mimeAllowed = ALLOWED_TYPES.includes(file.type) || isHeic;
+
+    if (!mimeAllowed) {
+      return { error: `Image ${index + 1} (${file.name}): Unsupported format. Only JPEG, PNG, WebP, and HEIC are allowed.` };
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return { error: `Image ${index + 1} (${file.name}): File size exceeds 50 MB limit.` };
+    }
+
+    return { valid: true };
+  };
+
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setUploading(true);
     setUploadProgress(0);
+    const errors = [];
+    const successfulUploads = [];
 
     try {
-      const uploadPromises = files.map(async (file, index) => {
-        const converted = await convertToJpeg(file);
-        const formData = new FormData();
-        formData.append('file', converted);
-
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!res.ok) throw new Error(`Upload failed for image ${index + 1}`);
-        const data = await res.json();
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
         
+        // Validate file
+        const validation = validateFile(file, index);
+        if (validation.error) {
+          errors.push(validation.error);
+          setUploadProgress(prev => prev + (100 / files.length));
+          continue;
+        }
+
+        try {
+          // Convert HEIC/HEIF first if needed
+          let fileToUpload = await convertHeicToJpeg(file);
+          
+          // Then convert to JPEG if still needed (for other formats)
+          if (fileToUpload.type !== 'image/jpeg') {
+            fileToUpload = await convertToJpeg(fileToUpload);
+          }
+
+          const formData = new FormData();
+          formData.append('file', fileToUpload);
+
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            const errorMessage = data.message || data.error || 'Unknown error';
+            errors.push(`Image ${index + 1} (${file.name}): ${errorMessage}`);
+          } else if (data.secure_url) {
+            successfulUploads.push(data.secure_url);
+          } else {
+            errors.push(`Image ${index + 1} (${file.name}): No URL returned from server`);
+          }
+        } catch (uploadError) {
+          errors.push(`Image ${index + 1} (${file.name}): ${uploadError.message || 'Upload failed'}`);
+        }
+
         setUploadProgress(prev => prev + (100 / files.length));
-        return data.secure_url;
-      });
+      }
 
-      const uploadedImages = await Promise.all(uploadPromises);
+      // Update state with successful uploads
+      if (successfulUploads.length > 0) {
+        setFields((prevFields) => ({
+          ...prevFields,
+          images: [...prevFields.images, ...successfulUploads],
+        }));
+      }
 
-      setFields((prevFields) => ({
-        ...prevFields,
-        images: [...prevFields.images, ...uploadedImages],
-      }));
+      // Show detailed error report if any failures
+      if (errors.length > 0) {
+        const errorMessage = `${successfulUploads.length} of ${files.length} images uploaded successfully.\n\nFailures:\n${errors.join('\n')}`;
+        alert(errorMessage);
+      } else {
+        // All succeeded
+        if (successfulUploads.length > 0) {
+          alert(`Successfully uploaded ${successfulUploads.length} image(s)!`);
+        }
+      }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Some images failed to upload. Please try again.');
+      alert(`Upload process failed: ${error.message}`);
     } finally {
       setUploading(false);
       setUploadProgress(0);

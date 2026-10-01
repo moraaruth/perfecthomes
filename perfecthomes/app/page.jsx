@@ -1,9 +1,8 @@
 require('events').EventEmitter.defaultMaxListeners = 20;
 import Hero from '@/components/Hero'
-// import Navbar from "@/components/Navbar";
 import HomeProperties from '@/components/HomeProperties'
 import InfoBoxes from '@/components/infoBoxes'
-import Footer from '@/components/Footer'
+import InstagramFeed from '@/components/InstagramFeed'
 
 const HomePage = () => {
   return (
@@ -11,6 +10,7 @@ const HomePage = () => {
       <Hero />
       <InfoBoxes />
       <HomeProperties />
+      <InstagramFeed />
     </>
   )
 }

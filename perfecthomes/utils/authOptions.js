@@ -1,6 +1,5 @@
 import connectDB from '@/config/database';
 import User from '@/models/User';
-
 import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions = {
@@ -18,41 +17,52 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    // Invoked on successful signin
     async signIn({ profile }) {
-      // 1. Connect to database
-      await connectDB();
-      // 2. Check if user exists
-      const userExists = await User.findOne({ email: profile.email });
-      // 3. If not, then add user to database
-      if (!userExists) {
-        // Truncate user name if too long
-        const username = profile.name.slice(0, 20);
+      try {
+        if (!profile?.email) {
+          console.error('[NextAuth] signIn: missing email in Google profile');
+          return false;
+        }
 
-        await User.create({
-          email: profile.email,
-          username,
-          image: profile.picture,
-        });
+        await connectDB();
+
+        const userExists = await User.findOne({ email: profile.email });
+
+        if (!userExists) {
+          const username = (profile.name || profile.email.split('@')[0]).slice(0, 20);
+
+          await User.create({
+            email: profile.email,
+            username,
+            image: profile.picture || '',
+          });
+        }
+
+        return true;
+      } catch (error) {
+        // Duplicate key on race condition — user already exists, still allow sign in
+        if (error.code === 11000) {
+          console.warn('[NextAuth] signIn: duplicate user on create (race condition), allowing sign in');
+          return true;
+        }
+        console.error('[NextAuth] signIn callback error:', error);
+        return false;
       }
-      // 4. Return true to allow sign in
-      return true;
     },
-    // Modifies the session object
+
     async session({ session }) {
       try {
-        // 1. Connect to database
         await connectDB();
-        // 2. Get user from database
+
         const user = await User.findOne({ email: session.user.email });
-        // 3. Assign the user id to the session
+
         if (user) {
           session.user.id = user._id.toString();
         }
-        // 4. return session
+
         return session;
       } catch (error) {
-        console.error('Session callback error:', error);
+        console.error('[NextAuth] session callback error:', error);
         return session;
       }
     },
