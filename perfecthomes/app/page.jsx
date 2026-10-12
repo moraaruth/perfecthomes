@@ -8,9 +8,9 @@ const HomePage = () => {
   return (
     <>
       <Hero />
-      <InfoBoxes />
+      {/* <InfoBoxes /> */}
       <HomeProperties />
-      <InstagramFeed />
+      {/* <InstagramFeed /> */}
     </>
   )
 }
