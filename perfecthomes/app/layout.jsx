@@ -19,8 +19,8 @@ const MainLayout = ({ children }) => {
     <GlobalProvider>
       <AuthProvider>
         <html lang='en'>
-          <body>
-            <TopBanner />
+          <body className='relative'>
+            {/* <TopBanner /> */}
             <Navbar />
             <main>{children}</main>
             <Footer />
