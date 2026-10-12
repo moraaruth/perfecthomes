@@ -19,7 +19,7 @@ const Hero = () => {
 
   return (
     <section
-      className="h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center transition-all duration-1000"
+      className="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center pt-20 pb-10 transition-all duration-1000"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${images[currentImageIndex]})`
       }}
