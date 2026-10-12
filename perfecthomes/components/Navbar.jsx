@@ -22,6 +22,24 @@ const Navbar = () => {
   const [providers, setProviders] = useState(null)
 
   const pathname = usePathname()
+  // Floating/transparent only over the home hero; other pages have no hero image behind the navbar.
+  const isHome = pathname === '/'
+
+  const navLinkClass = (path) =>
+    `rounded-md px-3 py-2 transition-colors ${
+      pathname === path
+        ? 'bg-[#800080] text-white'
+        : `${isHome ? 'text-white' : 'text-[#800080]'} hover:bg-[#800080] hover:text-white`
+    }`
+
+  const mobileLinkClass = (path) =>
+    `block rounded-md px-3 py-2 text-base font-medium ${
+      pathname === path
+        ? 'bg-[#800080] text-white'
+        : isHome
+          ? 'text-white hover:bg-white/20'
+          : 'text-[#800080]'
+    }`
 
   useEffect(() => {
     const setAuthProviders = async () => {
@@ -42,7 +60,13 @@ const Navbar = () => {
   // Prevent render if session is loading
   if (status === 'loading') {
     return (
-      <nav className="bg-white border-b border-gray-200">
+      <nav
+        className={
+          isHome
+            ? 'absolute top-0 left-0 z-50 w-full text-white'
+            : 'bg-white border-b border-gray-200'
+        }
+      >
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div>Loading...</div>
@@ -53,7 +77,13 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav
+      className={
+        isHome
+          ? 'absolute top-0 left-0 z-50 w-full bg-gradient-to-b from-black/50 to-transparent'
+          : 'bg-white border-b border-gray-200'
+      }
+    >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
@@ -61,7 +91,9 @@ const Navbar = () => {
             <button
               type="button"
               id="mobile-dropdown-button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className={`relative inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ${
+                isHome ? 'text-white' : 'text-gray-400'
+              }`}
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
@@ -95,157 +127,35 @@ const Navbar = () => {
               style={{ borderRadius: '50%' }}
               />
 
-              <span className="hidden md:block text-2xl font-bold ml-2" style={{ color: '#800080' }}>
+              <span
+                className={`hidden md:block text-2xl font-bold ml-2 ${
+                  isHome ? 'text-white drop-shadow-md' : 'text-[#800080]'
+                }`}
+              >
                 Perfect Homes
               </span>
             </Link>
             {/* <!-- Desktop Menu Hidden below md screens --> */}
             <div className="hidden lg:ml-6 lg:block">
               <div className="flex space-x-2">
-                <Link
-                  href="/"
-                  className={`${
-                    pathname === '/' ? 'text-white' : 'hover:text-white'
-                  } rounded-md px-3 py-2`}
-                  style={{
-                    color: pathname === '/' ? 'white' : '#800080',
-                    backgroundColor: pathname === '/' ? '#800080' : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (pathname !== '/') {
-                      e.target.style.backgroundColor = '#800080'
-                      e.target.style.color = 'white'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (pathname !== '/') {
-                      e.target.style.backgroundColor = 'transparent'
-                      e.target.style.color = '#800080'
-                    }
-                  }}
-                >
+                <Link href="/" className={navLinkClass('/')}>
                   Home
                 </Link>
-                <Link
-                  href="/about"
-                  className={`${
-                    pathname === '/about' ? 'text-white' : 'hover:text-white'
-                  } rounded-md px-3 py-2`}
-                  style={{
-                    color: pathname === '/about' ? 'white' : '#800080',
-                    backgroundColor: pathname === '/about' ? '#800080' : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (pathname !== '/about') {
-                      e.target.style.backgroundColor = '#800080'
-                      e.target.style.color = 'white'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (pathname !== '/about') {
-                      e.target.style.backgroundColor = 'transparent'
-                      e.target.style.color = '#800080'
-                    }
-                  }}
-                >
+                <Link href="/about" className={navLinkClass('/about')}>
                   About Us
                 </Link>
-                <Link
-                  href="/properties"
-                  className={`${
-                    pathname === '/properties' ? 'text-white' : 'hover:text-white'
-                  } rounded-md px-3 py-2`}
-                  style={{
-                    color: pathname === '/properties' ? 'white' : '#800080',
-                    backgroundColor: pathname === '/properties' ? '#800080' : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (pathname !== '/properties') {
-                      e.target.style.backgroundColor = '#800080'
-                      e.target.style.color = 'white'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (pathname !== '/properties') {
-                      e.target.style.backgroundColor = 'transparent'
-                      e.target.style.color = '#800080'
-                    }
-                  }}
-                >
+                <Link href="/properties" className={navLinkClass('/properties')}>
                   Properties
                 </Link>
-                <Link
-                  href="/book-view"
-                  className={`${
-                    pathname === '/book-view' ? 'text-white' : 'hover:text-white'
-                  } rounded-md px-3 py-2`}
-                  style={{
-                    color: pathname === '/book-view' ? 'white' : '#800080',
-                    backgroundColor: pathname === '/book-view' ? '#800080' : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (pathname !== '/book-view') {
-                      e.target.style.backgroundColor = '#800080'
-                      e.target.style.color = 'white'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (pathname !== '/book-view') {
-                      e.target.style.backgroundColor = 'transparent'
-                      e.target.style.color = '#800080'
-                    }
-                  }}
-                >
+                <Link href="/book-view" className={navLinkClass('/book-view')}>
                   Book For View
                 </Link>
-                <Link
-                  href="/contact"
-                  className={`${
-                    pathname === '/contact' ? 'text-white' : 'hover:text-white'
-                  } rounded-md px-3 py-2`}
-                  style={{
-                    color: pathname === '/contact' ? 'white' : '#800080',
-                    backgroundColor: pathname === '/contact' ? '#800080' : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (pathname !== '/contact') {
-                      e.target.style.backgroundColor = '#800080'
-                      e.target.style.color = 'white'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (pathname !== '/contact') {
-                      e.target.style.backgroundColor = 'transparent'
-                      e.target.style.color = '#800080'
-                    }
-                  }}
-                >
+                <Link href="/contact" className={navLinkClass('/contact')}>
                   Contact Us
                 </Link>
               
                 {isAdmin && (
-                  <Link
-                    href="/properties/add"
-                    className={`${
-                      pathname === '/properties/add' ? 'text-white' : 'hover:text-white'
-                    } rounded-md px-3 py-2`}
-                    style={{
-                      color: pathname === '/properties/add' ? 'white' : '#800080',
-                      backgroundColor: pathname === '/properties/add' ? '#800080' : 'transparent'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (pathname !== '/properties/add') {
-                        e.target.style.backgroundColor = '#800080'
-                        e.target.style.color = 'white'
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (pathname !== '/properties/add') {
-                        e.target.style.backgroundColor = 'transparent'
-                        e.target.style.color = '#800080'
-                      }
-                    }}
-                  >
+                  <Link href="/properties/add" className={navLinkClass('/properties/add')}>
                     Add Property
                   </Link>
                 )}
@@ -385,59 +295,39 @@ const Navbar = () => {
 
       {/* <!-- Mobile menu, show/hide based on menu state. --> */}
       {isMobileMenuOpen && (
-        <div id="mobile-menu">
+        <div id="mobile-menu" className={isHome ? 'bg-black/60 backdrop-blur-md' : ''}>
           <div className="space-y-1 px-2 pb-3 pt-2">
             <Link
               href="/"
-              className={`block rounded-md px-3 py-2 text-base font-medium`}
-              style={{
-                color: pathname === '/' ? 'white' : '#800080',
-                backgroundColor: pathname === '/' ? '#800080' : 'transparent'
-              }}
+              className={mobileLinkClass('/')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/about"
-              className={`block rounded-md px-3 py-2 text-base font-medium`}
-              style={{
-                color: pathname === '/about' ? 'white' : '#800080',
-                backgroundColor: pathname === '/about' ? '#800080' : 'transparent'
-              }}
+              className={mobileLinkClass('/about')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About Us
             </Link>
             <Link
               href="/properties"
-              className={`block rounded-md px-3 py-2 text-base font-medium`}
-              style={{
-                color: pathname === '/properties' ? 'white' : '#800080',
-                backgroundColor: pathname === '/properties' ? '#800080' : 'transparent'
-              }}
+              className={mobileLinkClass('/properties')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Properties
             </Link>
             <Link
               href="/book-view"
-              className={`block rounded-md px-3 py-2 text-base font-medium`}
-              style={{
-                color: pathname === '/book-view' ? 'white' : '#800080',
-                backgroundColor: pathname === '/book-view' ? '#800080' : 'transparent'
-              }}
+              className={mobileLinkClass('/book-view')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Book For View
             </Link>
             <Link
               href="/contact"
-              className={`block rounded-md px-3 py-2 text-base font-medium`}
-              style={{
-                color: pathname === '/contact' ? 'white' : '#800080',
-                backgroundColor: pathname === '/contact' ? '#800080' : 'transparent'
-              }}
+              className={mobileLinkClass('/contact')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Contact Us
@@ -445,11 +335,7 @@ const Navbar = () => {
             {isAdmin && (
               <Link
                 href="/properties/add"
-                className={`block rounded-md px-3 py-2 text-base font-medium`}
-                style={{
-                  color: pathname === '/properties/add' ? 'white' : '#800080',
-                  backgroundColor: pathname === '/properties/add' ? '#800080' : 'transparent'
-                }}
+                className={mobileLinkClass('/properties/add')}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Add Property
